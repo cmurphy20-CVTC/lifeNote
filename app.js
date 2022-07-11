@@ -1,10 +1,16 @@
 //jshint esversion:6
-
+require('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const mongoose = require("mongoose");
 const _ = require("lodash");
+const session = require('express-session');
+const passport = require("passport");
+const passportLocalMongoose = require("passport-local-mongoose");
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const findOrCreate = require('mongoose-findorcreate');
+const FacebookStrategy = require('passport-facebook').Strategy;
 
 const homeStartingContent = "Lacus vel facilisis volutpat est velit egestas dui id ornare. Semper auctor neque vitae tempus quam. Sit amet cursus sit amet dictum sit amet justo. Viverra tellus in hac habitasse. Imperdiet proin fermentum leo vel orci porta. Donec ultrices tincidunt arcu non sodales neque sodales ut. Mattis molestie a iaculis at erat pellentesque adipiscing. Magnis dis parturient montes nascetur ridiculus mus mauris vitae ultricies. Adipiscing elit ut aliquam purus sit amet luctus venenatis lectus. Ultrices vitae auctor eu augue ut lectus arcu bibendum at. Odio euismod lacinia at quis risus sed vulputate odio ut. Cursus mattis molestie a iaculis at erat pellentesque adipiscing.";
 const aboutContent = "Hac habitasse platea dictumst vestibulum rhoncus est pellentesque. Dictumst vestibulum rhoncus est pellentesque elit ullamcorper. Non diam phasellus vestibulum lorem sed. Platea dictumst quisque sagittis purus sit. Egestas sed sed risus pretium quam vulputate dignissim suspendisse. Mauris in aliquam sem fringilla. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Amet massa vitae tortor condimentum lacinia quis vel eros. Enim ut tellus elementum sagittis vitae. Mauris ultrices eros in cursus turpis massa tincidunt dui.";
@@ -13,11 +19,30 @@ const contactContent = "Scelerisque eleifend donec pretium vulputate sapien. Rho
 const app = express();
 
 app.set('view engine', 'ejs');
-
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
 
-mongoose.connect("mongodb://localhost:27017/blogDB", {useNewUrlParser: true});
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: {}
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+mongoose.connect(process.env.DB_LINK, {useNewUrlParser: true});
+
+const userSchema = new mongoose.Schema ({
+
+  username: { type: String, unique: true }, // values: email address, googleId, facebookId
+  password: String,
+  provider: String, // values: 'local', 'google', 'facebook'
+  email: String,
+  secret: String
+
+});
 
 const postSchema = {
 
@@ -27,6 +52,86 @@ const postSchema = {
 };
 
 const Post = mongoose.model("Post", postSchema);
+userSchema.plugin(passportLocalMongoose, {emailUnique: false});
+userSchema.plugin(findOrCreate);
+
+const User = mongoose.model("User", userSchema);
+
+passport.use(User.createStrategy());
+
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
+
+// Google Strategy
+passport.use(new GoogleStrategy({
+  clientID: process.env.CLIENT_ID,
+  clientSecret: process.env.CLIENT_SECRET,
+  callbackURL: "http://localhost:3000/auth/google/post",
+  userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
+},
+function(accessToken, refreshToken, profile, cb) {
+  console.log(profile);
+  User.findOrCreate({ username: profile.id },
+    {
+      provider: "google",
+      email: profile._json.email
+    }, function (err, user) {
+    return cb(err, user);
+  });
+}
+));
+
+// Facebook Strategy
+passport.use(new FacebookStrategy({
+  clientID: process.env.FACEBOOK_APP_ID,
+  clientSecret: process.env.FACEBOOK_APP_SECRET,
+  callbackURL: "http://localhost:3000/auth/facebook/post",
+  enableProof: true,
+  profileFields: ["id", "email"]
+},
+function(accessToken, refreshToken, profile, cb) {
+  User.findOrCreate(
+    { username: profile.id },
+    { 
+      provider: "google",
+      email: profile._json.email
+    }, function (err, user) {
+      return cb(err, user);
+  });
+}
+));
+
+app.get("/auth/google", passport.authenticate('google', {
+  
+  scope: ["profile", "email"]
+
+}));
+
+app.get('/auth/google/post', 
+  passport.authenticate('google', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/post');
+  });
+
+  app.get('/auth/facebook',
+  passport.authenticate('facebook', {
+    scope: ["email"]
+  }));
+
+app.get('/auth/facebook/post',
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/post');
+   });
 
 app.get("/", function(req, res){
 
@@ -38,6 +143,19 @@ app.get("/", function(req, res){
   })
 });
 
+app.get("/login", function(req, res){
+  res.render("login");
+});
+
+app.get("/register", function(req, res){
+  res.render("register");
+});
+
+app.get("/post", function(req, res){
+  res.render("post");
+})
+
+
 app.get("/about", function(req, res){
   res.render("about", {aboutContent: aboutContent});
 });
@@ -48,6 +166,19 @@ app.get("/contact", function(req, res){
 
 app.get("/compose", function(req, res){
   res.render("compose");
+});
+
+app.get("/login", function(req, res){
+  res.render("login");
+});
+
+app.get("/register", function(req, res){
+  res.render("register");
+});
+
+app.get("/logout", function(req, res) {
+  req.logOut();
+  res.redirect("/");
 });
 
 app.post("/compose", function(req, res){
@@ -63,22 +194,72 @@ app.post("/compose", function(req, res){
   });
 });
 
-app.get("/posts/:postId", function(req, res){
-  const requestedPostId = req.params.postId;
+// app.get("/posts/:postId", function(req, res){
+//   const requestedPostId = req.params.postId;
 
-    Post.findById({_id: requestedPostId}, function(err, post){
+//     Post.findById({_id: requestedPostId}, function(err, post){
 
-      res.render("post", {
+//       res.render("post", {
 
-        title: post.title,
+//         title: post.title,
 
-        content: post.content
+//         content: post.content
 
-      });
+//       });
 
-    });
+//     });
 
+// });
+
+app.post("/register", function(req, res){
+
+  User.register(new User({
+    username: req.body.username, 
+    firstName: req.body.firstName, 
+    lastName: req.body.lastName, 
+    email: req.body.email, 
+    phone: req.body.phone}), req.body.password,
+     function(err, user){
+
+    if (err) {
+      console.log(err);
+      res.redirect("/register");
+    } else {
+
+      passport.authenticate("local")(req, res, function(){
+        res.redirect("/post");
+
+      })
+    }
+  })
 });
+
+app.post("/login", function(req, res){
+
+  const user = new User({
+
+    username: req.body.username,
+
+    password: req.body.password,
+
+  });
+
+
+  req.login(user, function(err){
+
+    if (err) {
+      console.log(err);
+
+    } else if(req.isAuthenticated()) {
+      
+      passport.authenticate("local");
+
+      res.redirect("/post");
+
+    }
+  })
+});
+
 
 app.listen(3000, function() {
   console.log("Server started on port 3000");
