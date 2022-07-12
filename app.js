@@ -77,7 +77,7 @@ passport.use(new GoogleStrategy({
   userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
 },
 function(accessToken, refreshToken, profile, cb) {
-  console.log(profile);
+  
   User.findOrCreate({ username: profile.id },
     {
       provider: "google",
@@ -138,7 +138,7 @@ app.get("/", function(req, res){
   Post.find({}, function(err, posts){
   res.render("home", {
     startingContent: homeStartingContent,
-    posts: posts
+    // posts: posts
     });
   })
 });

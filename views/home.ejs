@@ -3,12 +3,15 @@
     <h1>Home</h1>
     <p> <%= startingContent %> </p>
 
-    <h3>Please Register An Account or Login to Book an Appointment</h3>
-    <button><a href="/register">Register</a></button>
-    <button><a href="/login">Login</a></button>
+    
 
+    <div id="button_reg">
+        <h3>Please Register An Account or Login</h3>
 
- 
-
+        <button class="btn btn-success btn-lg"><a class="text-decoration-none" href="/register">Register</a></button>
+        <button class="btn btn-success btn-lg"><a href="/login">Login</a></button>
+    </div>
+    
+        
 
 <%- include("partials/footer"); -%>
