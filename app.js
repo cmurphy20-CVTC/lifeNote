@@ -34,16 +34,6 @@ app.use(passport.session());
 
 mongoose.connect(process.env.DB_LINK, {useNewUrlParser: true});
 
-const userSchema = new mongoose.Schema ({
-
-  username: { type: String, unique: true }, // values: email address, googleId, facebookId
-  password: String,
-  provider: String, // values: 'local', 'google', 'facebook'
-  email: String,
-  secret: String
-
-});
-
 const postSchema = {
 
   title: String, 
@@ -52,6 +42,19 @@ const postSchema = {
 };
 
 const Post = mongoose.model("Post", postSchema);
+
+const userSchema = new mongoose.Schema ({
+
+  username: { type: String, unique: true },
+  firstName: String,
+  lastName: String, // values: email address, googleId, facebookId
+  password: String,
+  provider: String, // values: 'local', 'google', 'facebook'
+  email: String,
+  posts: [postSchema]
+});
+
+
 userSchema.plugin(passportLocalMongoose, {emailUnique: false});
 userSchema.plugin(findOrCreate);
 
@@ -89,24 +92,24 @@ function(accessToken, refreshToken, profile, cb) {
 ));
 
 // Facebook Strategy
-passport.use(new FacebookStrategy({
-  clientID: process.env.FACEBOOK_APP_ID,
-  clientSecret: process.env.FACEBOOK_APP_SECRET,
-  callbackURL: "http://localhost:3000/auth/facebook/post",
-  enableProof: true,
-  profileFields: ["id", "email"]
-},
-function(accessToken, refreshToken, profile, cb) {
-  User.findOrCreate(
-    { username: profile.id },
-    { 
-      provider: "google",
-      email: profile._json.email
-    }, function (err, user) {
-      return cb(err, user);
-  });
-}
-));
+// passport.use(new FacebookStrategy({
+//   clientID: process.env.FACEBOOK_APP_ID,
+//   clientSecret: process.env.FACEBOOK_APP_SECRET,
+//   callbackURL: "http://localhost:3000/auth/facebook/post",
+//   enableProof: true,
+//   profileFields: ["id", "email"]
+// },
+// function(accessToken, refreshToken, profile, cb) {
+//   User.findOrCreate(
+//     { username: profile.id },
+//     { 
+//       provider: "google",
+//       email: profile._json.email
+//     }, function (err, user) {
+//       return cb(err, user);
+//   });
+// }
+// ));
 
 app.get("/auth/google", passport.authenticate('google', {
   
@@ -121,26 +124,25 @@ app.get('/auth/google/post',
     res.redirect('/post');
   });
 
-  app.get('/auth/facebook',
-  passport.authenticate('facebook', {
-    scope: ["email"]
-  }));
+//   app.get('/auth/facebook',
+//   passport.authenticate('facebook', {
+//     scope: ["email"]
+//   }));
 
-app.get('/auth/facebook/post',
-  passport.authenticate('facebook', { failureRedirect: '/login' }),
-  function(req, res) {
-    // Successful authentication, redirect home.
-    res.redirect('/post');
-   });
+// app.get('/auth/facebook/post',
+//   passport.authenticate('facebook', { failureRedirect: '/login' }),
+//   function(req, res) {
+//     // Successful authentication, redirect home.
+//     res.redirect('/post');
+//    });
 
 app.get("/", function(req, res){
 
-  Post.find({}, function(err, posts){
+  
   res.render("home", {
-    startingContent: homeStartingContent,
-    // posts: posts
+    startingContent: homeStartingContent
     });
-  })
+  
 });
 
 app.get("/login", function(req, res){
@@ -152,7 +154,17 @@ app.get("/register", function(req, res){
 });
 
 app.get("/post", function(req, res){
-  res.render("post");
+
+  User.find({"posts": {$exists: true, $ne: []}}, function(err, usersFound){
+    if (err){
+      console.log(err);
+    } else {
+      if (usersFound) {
+        res.render("post", {usersWithPosts: usersFound});
+
+      }
+    }
+  })
 })
 
 
@@ -182,34 +194,45 @@ app.get("/logout", function(req, res) {
 });
 
 app.post("/compose", function(req, res){
-  const post = new Post({
-    title: req.body.postTitle,
-    content: req.body.postBody
+
+  const yourPostTitle = req.body.title;
+  const yourPostContent = req.body.content;
+  const newPost = new Post({
+    title: yourPostTitle,
+    content: yourPostContent
   });
 
-  post.save(function(err) {
-    if(!err) {
-     res.redirect("/"); 
-   } 
-  });
+  User.findById(req.user.id, function(err, userFound){
+    
+    if (err) {
+      console.log(err)
+    } else {
+      if(userFound) {
+        userFound.posts.push(newPost);
+        userFound.save(function(){
+          res.redirect('/post')
+        })
+      }
+    }
+  })
 });
 
-// app.get("/posts/:postId", function(req, res){
-//   const requestedPostId = req.params.postId;
+app.get("/posts/:postId", function(req, res){
+  const requestedPostId = req.params.postId;
 
-//     Post.findById({_id: requestedPostId}, function(err, post){
+    Post.findById({_id: requestedPostId}, function(err, post){
 
-//       res.render("post", {
+      res.render("post", {
 
-//         title: post.title,
+        title: post.title,
 
-//         content: post.content
+        content: post.content
 
-//       });
+      });
 
-//     });
+    });
 
-// });
+});
 
 app.post("/register", function(req, res){
 
@@ -218,7 +241,7 @@ app.post("/register", function(req, res){
     firstName: req.body.firstName, 
     lastName: req.body.lastName, 
     email: req.body.email, 
-    phone: req.body.phone}), req.body.password,
+    posts: [{title: "Hello", content: "Get organized"}]}), req.body.password,
      function(err, user){
 
     if (err) {

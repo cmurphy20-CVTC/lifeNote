@@ -2,4 +2,22 @@
 
 <h1>Welcome!</h1>
 
+<% usersWithPosts.forEach((user) => { %>
+  <% user.posts.forEach((post) => { %>
+    <h1><%=post.title%></h1>
+
+    <p><%=post.content%></p>
+  <% }) %>
+<% }) %>
+
+  <div class="col-sm-4">
+    <div class="card body">
+      <div class="card-body">
+        <a class="btn btn-danger btn-lg" href="/compose" role="button">
+          Compose
+        </a>
+      </div>
+    </div>
+  </div>
+
 <%- include("partials/footer"); -%>

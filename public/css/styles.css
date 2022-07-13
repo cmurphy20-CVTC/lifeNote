@@ -52,8 +52,8 @@ html {
 a:hover, 
 a:visited,
 a:focus {
-  text-decoration: none !important;
-  color: #fff;
+  /*text-decoration: none !important; 
+  color: #fff;*/
 }
 
 #logo {
