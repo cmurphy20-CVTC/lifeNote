@@ -18,9 +18,9 @@ const contactContent = "Scelerisque eleifend donec pretium vulputate sapien. Rho
 
 const app = express();
 
+app.use(express.static("public"));
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(express.static("public"));
 
 app.use(session({
   secret: 'keyboard cat',
@@ -34,12 +34,13 @@ app.use(passport.session());
 
 mongoose.connect(process.env.DB_LINK, {useNewUrlParser: true});
 
-const postSchema = {
 
-  title: String, 
+const postSchema = new mongoose.Schema ({
+
+
   content: String
 
-};
+});
 
 const Post = mongoose.model("Post", postSchema);
 
@@ -137,7 +138,6 @@ app.get('/auth/google/post',
 //    });
 
 app.get("/", function(req, res){
-
   
   res.render("home", {
     startingContent: homeStartingContent
@@ -155,16 +155,11 @@ app.get("/register", function(req, res){
 
 app.get("/post", function(req, res){
 
-  User.find({"posts": {$exists: true, $ne: []}}, function(err, usersFound){
-    if (err){
-      console.log(err);
-    } else {
-      if (usersFound) {
-        res.render("post", {usersWithPosts: usersFound});
-
-      }
-    }
-  })
+  if(req.isAuthenticated()) {
+    res.render("post")
+  } else {
+    res.redirect("/login")
+  }
 })
 
 
@@ -177,7 +172,11 @@ app.get("/contact", function(req, res){
 });
 
 app.get("/compose", function(req, res){
-  res.render("compose");
+  // if(req.isAuthenticated()) {
+    res.render("compose");
+  // } else {
+  //   res.redirect("/")
+  // }
 });
 
 app.get("/login", function(req, res){
@@ -195,44 +194,51 @@ app.get("/logout", function(req, res) {
 
 app.post("/compose", function(req, res){
 
-  const yourPostTitle = req.body.title;
-  const yourPostContent = req.body.content;
-  const newPost = new Post({
-    title: yourPostTitle,
-    content: yourPostContent
-  });
+  // const yourPostTitle = req.body.title;
+   
+  
+  // const newPost = {
+  //   content: yourPostContent
+  // };
+if (req.isAuthenticated) {
+
+  // userSchema.findOneAndUpdate({_id: req.user.id}, {$addToSet : {
+  //   posts: yourPostContent
+  // }})
+
+  // res.redirect("/post")
 
   User.findById(req.user.id, function(err, userFound){
-    
     if (err) {
       console.log(err)
     } else {
       if(userFound) {
-        userFound.posts.push(newPost);
+        userFound.posts.push(req.body.content);
         userFound.save(function(){
           res.redirect('/post')
         })
       }
     }
   })
+}
 });
 
-app.get("/posts/:postId", function(req, res){
-  const requestedPostId = req.params.postId;
+// app.get("/posts/:postId", function(req, res){
+//   const requestedPostId = req.params.postId;
 
-    Post.findById({_id: requestedPostId}, function(err, post){
+//     Post.findById({_id: requestedPostId}, function(err, post){
 
-      res.render("post", {
+//       res.render("post", {
 
-        title: post.title,
+//         title: post.title,
 
-        content: post.content
+//         content: post.content
 
-      });
+//       });
 
-    });
+//     });
 
-});
+// });
 
 app.post("/register", function(req, res){
 
@@ -240,8 +246,8 @@ app.post("/register", function(req, res){
     username: req.body.username, 
     firstName: req.body.firstName, 
     lastName: req.body.lastName, 
-    email: req.body.email, 
-    posts: [{title: "Hello", content: "Get organized"}]}), req.body.password,
+    email: req.body.email
+    }), req.body.password,
      function(err, user){
 
     if (err) {
@@ -250,7 +256,7 @@ app.post("/register", function(req, res){
     } else {
 
       passport.authenticate("local")(req, res, function(){
-        res.redirect("/post");
+        res.redirect("/compose");
 
       })
     }
@@ -273,11 +279,13 @@ app.post("/login", function(req, res){
     if (err) {
       console.log(err);
 
-    } else if(req.isAuthenticated()) {
+    } else {
       
-      passport.authenticate("local");
+      passport.authenticate("local")(req, res, function(){
+        res.redirect("/post");
+      });
 
-      res.redirect("/post");
+      
 
     }
   })
