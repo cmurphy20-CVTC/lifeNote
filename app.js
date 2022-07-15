@@ -150,11 +150,11 @@ app.get("/contact", function(req, res){
 });
 
 app.get("/compose", function(req, res){
-  // if(req.isAuthenticated()) {
+   if(req.isAuthenticated()) {
     res.render("compose");
-  // } else {
-  //   res.redirect("/")
-  // }
+   } else {
+    res.redirect("/")
+   }
 });
 
 app.get("/login", function(req, res){
