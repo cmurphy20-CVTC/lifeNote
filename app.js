@@ -54,7 +54,6 @@ const userSchema = new mongoose.Schema ({
   posts: [postSchema]
 });
 
-
 userSchema.plugin(passportLocalMongoose, {emailUnique: false});
 userSchema.plugin(findOrCreate);
 
@@ -149,6 +148,10 @@ app.get("/contact", function(req, res){
   res.render("contact", {contactContent: contactContent});
 });
 
+app.get("/editProfile", function(req, res){
+  res.render("editProfile");
+});
+
 app.get("/compose", function(req, res){
    if(req.isAuthenticated()) {
     res.render("compose");
@@ -163,11 +166,6 @@ app.get("/login", function(req, res){
 
 app.get("/register", function(req, res){
   res.render("register");
-});
-
-app.get("/logout", function(req, res) {
-  req.logOut();
-  res.redirect("/");
 });
 
 app.post("/compose", function(req, res){
@@ -228,7 +226,7 @@ app.post("/register", function(req, res){
 
     if (err) {
       console.log(err);
-      res.redirect("/register");
+      return res.render("register");
     } else {
 
       passport.authenticate("local")(req, res, function(){
@@ -265,6 +263,39 @@ app.post("/login", function(req, res){
   })
 });
 
+// app.post("/editProfile", function(req, res){
+
+//   const newPassword = req.body.newPassword;
+//   const confirmPassword = req.body.confirmPassword;
+//   const currentPassword = req.body.currentPassword;
+
+//   console.log(newPassword)
+//   console.log(confirmPassword)
+
+//   User.findById(req.user.id, function(err, userFound){
+//     if (err) {
+//       console.log(err)
+//     } else {
+//       if(userFound && newPassword === confirmPassword) {
+        
+//         userFound.changePassword(currentPassword, newPassword, function(err){
+//           if(err) {
+//             res.redirect('/editProfile')        
+//           } else {
+//             res.redirect("/post")
+//       }
+//     })
+//   }}
+
+
+// }});
+
+app.get('/logout', function(req, res){
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    res.redirect('/');
+  });
+});
 
 app.listen(3000, function() {
   console.log("Server started on port 3000");

@@ -2,11 +2,18 @@
 
 <h1>Welcome!</h1>
 
+<div>
+
+  <li><a href="/editProfile">Edit Your Profile</a></li>
+  <a class="btn btn-light btn-lg" href="/logout" role="button">Log Out</a>
+
+</div>
+
 <%  postsForPage.forEach(function(post) { %>
 
-  <h3><%post.title%></h3>
+  <h3><%=post.title%></h3>
 
-  <p><%post.content%></p>
+  <p><%=post.content%></p>
  
     <% }) %>
   

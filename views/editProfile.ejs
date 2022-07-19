@@ -1,0 +1,49 @@
+<%- include("partials/header"); -%>
+
+<h3>Edit Profile</h3>
+
+<div class="row">
+  <div class="col-sm-8">
+    <div class="card">
+      <div class="card-body">
+
+        <h3>Change Your Password</h3>
+
+        <!-- Makes POST request to /editProfile route -->
+        <form action="/editProfile" method="POST">
+          <div class="form-group">
+            <label for="password">Current Password</label>
+            <input type="password" class="form-control" name="currentPassword">
+          </div>
+          <div class="form-group">
+            <label for="password">New Password</label>
+            <input id="newPassword" type="password" class="form-control" name="newPassword">
+          </div>
+          <div class="form-group">
+            <label for="password">Confirm New Password</label>
+            <input id="confirmPassword" type="password" class="form-control" name="confirmPassword">
+          </div>
+          <button id="changePassBtn" type="submit" class="btn btn-dark">Change Password</button>
+        </form>
+
+        <h3>Change Your Profile Color</h3>
+        <!-- Makes POST request to /editProfile route -->
+        <form action="/editProfileColor" method="POST">
+          <div class="form-group">
+            <label for="text">Default:</label>
+            <input type="radio" class="form-control" name="defaultColor" value="Default">
+          </div>
+          <div class="form-group">
+            <label for="text">Blue</label>
+            <input type="color" class="form-control" name="blue" value="#fff">
+          </div>
+          <button id="changePassBtn" type="submit" class="btn btn-dark">Change Color</button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<%- include("partials/footer"); -%>
