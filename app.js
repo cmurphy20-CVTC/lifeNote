@@ -282,31 +282,20 @@ app.post("/editProfile", function(req, res){
   const confirmPassword = req.body.confirmPassword;
   const oldPassword = req.body.currentPassword;
 
-  schema.methods.changePassword = function(oldPassword, newPassword, cb) {
-    if (!oldPassword || !newPassword) {
-      return cb(new errors.MissingPasswordError(options.errorMessages.MissingPasswordError));
-    }
-
-    var self = this;
-
-    this.authenticate(oldPassword, function(err, authenticated) {
-      if (err) { return cb(err); }
-
-      if (!authenticated) {
-        return cb(new errors.IncorrectPasswordError(options.errorMessages.IncorrectPasswordError));
+  User.findById(req.user.id, function(err, userFound){
+    if (err) {
+      console.log(err)
+    } else {
+      if(userFound) {
+        userFound.changePassword(oldPassword, newPassword, function(err){
+          userFound.save(function(){
+            res.redirect('/post')
+        })
+       
+        })
       }
-
-      self.setPassword(newPassword, function(setPasswordErr, user) {
-        if (setPasswordErr) { return cb(setPasswordErr); }
-
-        self.save(function(saveErr) {
-          if (saveErr) { return cb(saveErr); }
-
-          cb(null, user);
-        });
-      });
-    });
-  };
+    }
+  })
 
 
 });
