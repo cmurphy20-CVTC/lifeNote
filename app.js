@@ -11,6 +11,12 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require('mongoose-findorcreate');
 
+// // from passport-local-mongoose library for password validation and error handling
+// const pbkdf2 = require('./lib/pbkdf2');
+// const errors = require('./lib/errors');
+// const authenticate = require('./lib/authenticate');
+
+
 const homeStartingContent = "Lacus vel facilisis volutpat est velit egestas dui id ornare. Semper auctor neque vitae tempus quam. Sit amet cursus sit amet dictum sit amet justo. Viverra tellus in hac habitasse. Imperdiet proin fermentum leo vel orci porta. Donec ultrices tincidunt arcu non sodales neque sodales ut. Mattis molestie a iaculis at erat pellentesque adipiscing. Magnis dis parturient montes nascetur ridiculus mus mauris vitae ultricies. Adipiscing elit ut aliquam purus sit amet luctus venenatis lectus. Ultrices vitae auctor eu augue ut lectus arcu bibendum at. Odio euismod lacinia at quis risus sed vulputate odio ut. Cursus mattis molestie a iaculis at erat pellentesque adipiscing.";
 const aboutContent = "Hac habitasse platea dictumst vestibulum rhoncus est pellentesque. Dictumst vestibulum rhoncus est pellentesque elit ullamcorper. Non diam phasellus vestibulum lorem sed. Platea dictumst quisque sagittis purus sit. Egestas sed sed risus pretium quam vulputate dignissim suspendisse. Mauris in aliquam sem fringilla. Semper risus in hendrerit gravida rutrum quisque non tellus orci. Amet massa vitae tortor condimentum lacinia quis vel eros. Enim ut tellus elementum sagittis vitae. Mauris ultrices eros in cursus turpis massa tincidunt dui.";
 const contactContent = "Scelerisque eleifend donec pretium vulputate sapien. Rhoncus urna neque viverra justo nec ultrices. Arcu dui vivamus arcu felis bibendum. Consectetur adipiscing elit duis tristique. Risus viverra adipiscing at in tellus integer feugiat. Sapien nec sagittis aliquam malesuada bibendum arcu vitae. Consequat interdum varius sit amet mattis. Iaculis nunc sed augue lacus. Interdum posuere lorem ipsum dolor sit amet consectetur adipiscing elit. Pulvinar elementum integer enim neque. Ultrices gravida dictum fusce ut placerat orci nulla. Mauris in aliquam sem fringilla ut morbi tincidunt. Tortor posuere ac ut consequat semper viverra nam libero.";
@@ -121,23 +127,26 @@ app.get("/register", function(req, res){
 
 app.get("/post", function(req, res){
 
+  if(!req.isAuthenticated() || !req.user.id) {
+
+    res.redirect("/")
+
+  } else {
+
   User.findById(req.user.id, function(err, userPosts){
     if (err){
       console.log(err);
+      res.redirect("/")
     } else {
       if (userPosts) {
        
         res.render("post", {postsForPage: userPosts.posts});
       }
     }
-  });
+  
 
-  // if(req.isAuthenticated()) {
-  //   res.render("post")
-  // } else {
-  //   res.redirect("/login")
-  // }
-})
+  })
+}});
 
 
 app.get("/about", function(req, res){
@@ -263,32 +272,44 @@ app.post("/login", function(req, res){
   })
 });
 
-// app.post("/editProfile", function(req, res){
+app.post("/editProfile", function(req, res){
 
-//   const newPassword = req.body.newPassword;
-//   const confirmPassword = req.body.confirmPassword;
-//   const currentPassword = req.body.currentPassword;
+  if (!req.isAuthenticated()) {
+    res.redirect("/")
+  }
 
-//   console.log(newPassword)
-//   console.log(confirmPassword)
+  const newPassword = req.body.newPassword;
+  const confirmPassword = req.body.confirmPassword;
+  const oldPassword = req.body.currentPassword;
 
-//   User.findById(req.user.id, function(err, userFound){
-//     if (err) {
-//       console.log(err)
-//     } else {
-//       if(userFound && newPassword === confirmPassword) {
-        
-//         userFound.changePassword(currentPassword, newPassword, function(err){
-//           if(err) {
-//             res.redirect('/editProfile')        
-//           } else {
-//             res.redirect("/post")
-//       }
-//     })
-//   }}
+  schema.methods.changePassword = function(oldPassword, newPassword, cb) {
+    if (!oldPassword || !newPassword) {
+      return cb(new errors.MissingPasswordError(options.errorMessages.MissingPasswordError));
+    }
+
+    var self = this;
+
+    this.authenticate(oldPassword, function(err, authenticated) {
+      if (err) { return cb(err); }
+
+      if (!authenticated) {
+        return cb(new errors.IncorrectPasswordError(options.errorMessages.IncorrectPasswordError));
+      }
+
+      self.setPassword(newPassword, function(setPasswordErr, user) {
+        if (setPasswordErr) { return cb(setPasswordErr); }
+
+        self.save(function(saveErr) {
+          if (saveErr) { return cb(saveErr); }
+
+          cb(null, user);
+        });
+      });
+    });
+  };
 
 
-// }});
+});
 
 app.get('/logout', function(req, res){
   req.logout(function(err) {
