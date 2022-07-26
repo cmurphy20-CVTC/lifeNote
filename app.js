@@ -187,7 +187,7 @@ app.get("/register", function(req, res){
 
 app.post("/compose", function(req, res){
 
-  const yourPostId = req.user.email;
+  const yourPostId = req.user.id;
   const yourPostTitle = req.body.postTitle;
   const yourPostContent = req.body.postBody; 
   
@@ -209,39 +209,38 @@ app.post("/compose", function(req, res){
         })
       }
     }
-  })
-
+  });
 });
 
 app.get("/posts/:postId", async function(req, res){
   const requestedPostId = req.params.postId;
 
-  console.log(req.params)
-
   let postObject = await User.findOne({
 
     'posts': {
     
-    $elemMatch: {
+      $elemMatch: {
     
-    'title': requestedPostId
+        'id': requestedPostId
     
-    }
-    
-    }
-    
-    });
-    
-    const post = postObject.posts;
-    
-    for (let i = 0; i < post.length; i++) {
-    
-    if (post.title === requestedPostId) {
-      console.log(post.title)
-    }
+      }
     
     }
- 
+    
+  });
+    
+  const post = postObject.posts;    
+    
+    post.forEach(function(singlePost) {
+
+      console.log(singlePost.id)
+      if( singlePost.id === requestedPostId) {
+        res.render("singlePost", {
+          title: singlePost.title,
+          content: singlePost.content
+        })
+      } 
+    })
   });
   
 
