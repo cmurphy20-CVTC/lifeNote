@@ -153,8 +153,6 @@ app.get("/post", function(req, res){
         res.render("post", {postsForPage: userPosts.posts});
       }
     }
-  
-
   })
 }});
 
@@ -215,16 +213,37 @@ app.post("/compose", function(req, res){
 
 });
 
-// app.get("/posts/:postId", function(req, res){
-//   const requestedPostId = req.params.postId;
+app.get("/posts/:postId", async function(req, res){
+  const requestedPostId = req.params.postId;
 
-//   Post.findOne({_id: requestedPostId}, function(err, post){
-//     res.render("singlePost", {
-//       title: post.title,
-//       content: post.content
-//     });
-//   });
-//   })
+  console.log(req.params)
+
+  let postObject = await User.findOne({
+
+    'posts': {
+    
+    $elemMatch: {
+    
+    'title': requestedPostId
+    
+    }
+    
+    }
+    
+    });
+    
+    const post = postObject.posts;
+    
+    for (let i = 0; i < post.length; i++) {
+    
+    if (post.title === requestedPostId) {
+      console.log(post.title)
+    }
+    
+    }
+ 
+  });
+  
 
 app.post("/register", function(req, res){
 
