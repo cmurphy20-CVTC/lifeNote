@@ -1,0 +1,49 @@
+<%- include("partials/header"); -%>
+
+<h1>Create Your Topics!</h1>
+
+<div>
+
+  <li><a href="/editProfile">Edit Your Profile</a></li>
+  <a class="btn btn-light btn-lg" href="/logout" role="button">Log Out</a>
+
+</div>
+
+<h3>Write down some topics of what you want to remember.</h3>
+<p>Later you will be able to create posts for each topic.</p>
+<p>The topics can be whatever you want!</p>
+
+
+  <!-- Here will be a form with 4-6 fields to fill in     -->
+
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="card">
+        <div class="card-body">
+
+          <!-- Makes POST request to /createTopics route -->
+          <form action="/createTopics" method="POST">
+            <div class="form-group">
+              <label for="firstTopic">First Topic</label>
+              <input type="text" class="form-control" name="firstTopic" placeholder="People">
+            </div>
+            <div class="form-group">
+              <label for="secondTopic">Second Topic</label>
+              <input type="text" class="form-control" name="secondTopic" placeholder="Family">
+            </div>
+            <div class="form-group">
+              <label for="thirdTopic">Third Topic</label>
+              <input type="text" class="form-control" name="thirdTopic" placeholder="Sports">
+            </div>
+            <div class="form-group">
+              <label for="fourthTopic">Fourth Topic</label>
+              <input type="text" class="form-control" name="forthTopic" placeholder="Recipes">
+            </div>
+            <button type="submit" class="btn btn-dark">Confrim</button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+
+<%- include("partials/footer"); -%>

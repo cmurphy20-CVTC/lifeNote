@@ -33,9 +33,29 @@ app.use(passport.session());
 
 mongoose.connect(process.env.DB_LINK, {useNewUrlParser: true});
 
+const topicSchema = new mongoose.Schema({
+
+  userId: String,
+  topicId: String,
+  title: String,
+  content: String,
+  createdAt: {
+    type: Date, 
+    default: () => Date.now()
+  },
+  updatedAt: {
+    type: Date, 
+    default: () => Date.now()
+  }
+
+})
+
+const Topic = mongoose.model("Topic", topicSchema);
+
 const postSchema = new mongoose.Schema ({
 
   userId: String,
+  topicId: String,
   title: String,
   content: String,
   createdAt: {
@@ -59,6 +79,7 @@ const userSchema = new mongoose.Schema ({
   password: String,
   provider: String, // values: 'local', 'google', 'facebook'
   email: String,
+  topics: [topicSchema],
   posts: [postSchema],
   createdAt: {
     type: Date, 
@@ -133,6 +154,14 @@ app.get("/login", function(req, res){
 
 app.get("/register", function(req, res){
   res.render("register");
+});
+
+app.get("/createTopics", function(req, res){
+  if(req.isAuthenticated()) {
+    res.render("createTopic");
+   } else {
+    res.redirect("/")
+   }
 });
 
 app.get("/post", function(req, res){
@@ -260,7 +289,7 @@ app.post("/register", function(req, res){
     } else {
 
       passport.authenticate("local")(req, res, function(){
-        res.redirect("/compose");
+        res.redirect("/createTopics");
 
       })
     }
