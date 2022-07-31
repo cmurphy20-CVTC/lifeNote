@@ -9,16 +9,12 @@
 
 </div>
 
+<%  topicsForPage.forEach(function(topic) { %>
 
-  <!-- This is where the topics will be displayed in boxes where the user can click to select and access the posts related to each topic     -->
-  <div class="col-sm-4">
-    <div class="card body">
-      <div class="card-body">
-        <a class="btn btn-danger btn-lg" href="/compose" role="button">
-          Compose
-        </a>
-      </div>
-    </div>
-  </div>
+  <h4><a href="/post"><%=topic.title%></a></h4>
+
+    <% }) %>
+
+
 
 <%- include("partials/footer"); -%>

@@ -38,7 +38,6 @@ const topicSchema = new mongoose.Schema({
   userId: String,
   topicId: String,
   title: String,
-  content: String,
   createdAt: {
     type: Date, 
     default: () => Date.now()
@@ -156,7 +155,7 @@ app.get("/register", function(req, res){
   res.render("register");
 });
 
-app.get("/createTopics", function(req, res){
+app.get("/createTopic", function(req, res){
   if(req.isAuthenticated()) {
     res.render("createTopic");
    } else {
@@ -180,6 +179,27 @@ app.get("/post", function(req, res){
       if (userPosts) {
        
         res.render("post", {postsForPage: userPosts.posts});
+      }
+    }
+  })
+}});
+
+app.get("/userHome", function(req, res){
+
+  if(!req.isAuthenticated() || !req.user.id) {
+
+    res.redirect("/")
+
+  } else {
+
+  User.findById(req.user.id, function(err, userTopics){
+    if (err){
+      console.log(err);
+      res.redirect("/")
+    } else {
+      if (userTopics) {
+       
+        res.render("userHome", {topicsForPage: userTopics.topics});
       }
     }
   })
@@ -289,7 +309,7 @@ app.post("/register", function(req, res){
     } else {
 
       passport.authenticate("local")(req, res, function(){
-        res.redirect("/createTopics");
+        res.redirect("/createTopic");
 
       })
     }
@@ -346,6 +366,32 @@ app.post("/editProfile", function(req, res){
     }
   })
 
+
+});
+
+app.post("/createTopic", function(req, res){
+
+  const yourUserId = req.user.id;
+  const yourTopicTitle = req.body.firstTopic;
+  
+  const newTopic = new Topic ({
+    userId: yourUserId,
+    title: yourTopicTitle
+
+  });
+
+  User.findById(req.user.id, function(err, userFound){
+    if (err) {
+      console.log(err)
+    } else {
+      if(userFound) {
+        userFound.topics.push(newTopic);
+        userFound.save(function(){
+          res.redirect('/userHome')
+        })
+      }
+    }
+  })
 
 });
 
