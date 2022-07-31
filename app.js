@@ -177,8 +177,28 @@ app.get("/post", function(req, res){
       res.redirect("/")
     } else {
       if (userPosts) {
-       
-        res.render("post", {postsForPage: userPosts.posts});
+
+        const postsForTopic = [];
+
+        firstPostTopicId = userPosts.posts[0].topicId;
+
+        console.log(firstPostTopicId)
+
+        let posts = userPosts.posts;
+
+        for (let i = 0; i < posts.length; i++) {
+    
+          if (posts.topicId === firstPostTopicId) {
+
+            console.log("true")
+
+            //postsForTopic.push(userPosts.posts.post);        
+         }
+        
+        }    
+        res.render("post", {postsForPage: postsForTopic});
+      } else {
+        res.redirect("/userHome")
       }
     }
   })
@@ -236,7 +256,7 @@ app.get("/register", function(req, res){
 
 app.post("/compose", function(req, res){
 
-  const yourPostId = req.user.email;
+  const yourPostId = req.user.id;
   const yourPostTitle = req.body.postTitle;
   const yourPostContent = req.body.postBody; 
   
@@ -244,7 +264,6 @@ app.post("/compose", function(req, res){
     userId: yourPostId,
     title: yourPostTitle,
     content: yourPostContent
-
   });
 
   User.findById(req.user.id, function(err, userFound){
@@ -252,6 +271,9 @@ app.post("/compose", function(req, res){
       console.log(err)
     } else {
       if(userFound) {
+        const yourTopicId = userFound.topics[0].id;
+
+        newPost.topicId = yourTopicId;
         userFound.posts.push(newPost);
         userFound.save(function(){
           res.redirect('/post')
@@ -265,31 +287,31 @@ app.post("/compose", function(req, res){
 app.get("/posts/:postId", async function(req, res){
   const requestedPostId = req.params.postId;
 
-  console.log(req.params)
+  //console.log(requestedPostId)
 
-  let postObject = await User.findOne({
+  // let postObject = await User.findOne({
 
-    'posts': {
+  //   'posts': {
     
-    $elemMatch: {
+  //   $elemMatch: {
     
-    'title': requestedPostId
+  //   'title': requestedPostId
     
-    }
+  //   }
     
-    }
+  //   }
     
-    });
+  //   });
     
-    const post = postObject.posts;
+    //const post = postObject.posts;
     
-    for (let i = 0; i < post.length; i++) {
+    // for (let i = 0; i < post.length; i++) {
     
-    if (post.title === requestedPostId) {
-      console.log(post.title)
-    }
+    // if (post.title === requestedPostId) {
+    //   console.log(post.title)
+    // }
     
-    }
+    // }
  
   });
   
@@ -335,7 +357,7 @@ app.post("/login", function(req, res){
     } else {
       
       passport.authenticate("local")(req, res, function(){
-        res.redirect("/post");
+        res.redirect("/userHome");
       });
 
     }
@@ -385,7 +407,16 @@ app.post("/createTopic", function(req, res){
       console.log(err)
     } else {
       if(userFound) {
+
+        const newPost = new Post ({
+          userId: yourUserId,
+          topicId: newTopic.id,
+          title: "Create a Post!",
+          content: "What do you want to remember?"
+        })
+
         userFound.topics.push(newTopic);
+        userFound.posts.push(newPost);
         userFound.save(function(){
           res.redirect('/userHome')
         })
