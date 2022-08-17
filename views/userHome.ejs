@@ -9,12 +9,32 @@
 
 </div>
 
+<form action="/chooseTopic" method="POST">
+  
+
 <%  topicsForPage.forEach(function(topic) { %>
 
-  <h4><a href="/post"><%=topic.title%></a></h4>
+  <div class="form-group">
+
+    <label for="text"><%=topic.title%></label>
+    <input type="radio" class="form-control" name="chosenTopic" value="<%=topic.title%>" id="<%topic.id%>">
+ 
+</div>
 
     <% }) %>
 
+    <button type="submit" value="chosenTopicBtn" class="btn btn-dark">Confirm</button>
+
+</form>
+
+    <form action="/createAdditionalTopic" method="POST">
+      <div class="form-group">
+        <label for="additionalTopic">Topic</label>
+        <input type="text" class="form-control" name="additionalTopic" placeholder="Recipes">
+      </div>
+  
+      <button type="submit" class="btn btn-dark">Confirm</button>
+    </form>
 
 
 <%- include("partials/footer"); -%>

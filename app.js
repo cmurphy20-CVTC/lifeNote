@@ -33,24 +33,6 @@ app.use(passport.session());
 
 mongoose.connect(process.env.DB_LINK, {useNewUrlParser: true});
 
-const topicSchema = new mongoose.Schema({
-
-  userId: String,
-  topicId: String,
-  title: String,
-  createdAt: {
-    type: Date, 
-    default: () => Date.now()
-  },
-  updatedAt: {
-    type: Date, 
-    default: () => Date.now()
-  }
-
-})
-
-const Topic = mongoose.model("Topic", topicSchema);
-
 const postSchema = new mongoose.Schema ({
 
   userId: String,
@@ -70,6 +52,25 @@ const postSchema = new mongoose.Schema ({
 
 const Post = mongoose.model("Post", postSchema);
 
+const topicSchema = new mongoose.Schema({
+
+  userId: String,
+  topicId: String,
+  title: String,
+  posts: [postSchema],
+  createdAt: {
+    type: Date, 
+    default: () => Date.now()
+  },
+  updatedAt: {
+    type: Date, 
+    default: () => Date.now()
+  }
+
+})
+
+const Topic = mongoose.model("Topic", topicSchema);
+
 const userSchema = new mongoose.Schema ({
 
   username: { type: String, unique: true },
@@ -78,8 +79,7 @@ const userSchema = new mongoose.Schema ({
   password: String,
   provider: String, // values: 'local', 'google', 'facebook'
   email: String,
-  topics: [topicSchema],
-  posts: [postSchema],
+  topics: [{type: mongoose.Schema.Types.ObjectId, ref: 'Topic'}],
   createdAt: {
     type: Date, 
     default: () => Date.now()
@@ -176,33 +176,29 @@ app.get("/post", function(req, res){
       console.log(err);
       res.redirect("/")
     } else {
+
       if (userPosts) {
 
         const postsForTopic = [];
 
         firstPostTopicId = userPosts.posts[0].topicId;
-
-        console.log(firstPostTopicId)
+        
 
         let posts = userPosts.posts;
 
-        for (let i = 0; i < posts.length; i++) {
-    
-          if (posts.topicId === firstPostTopicId) {
-
-            console.log("true")
-
-            //postsForTopic.push(userPosts.posts.post);        
-         }
-        
-        }    
+        posts.forEach(function(post){
+          if(post.topicId === firstPostTopicId) {
+            postsForTopic.push(post)
+          }
+        })
         res.render("post", {postsForPage: postsForTopic});
       } else {
         res.redirect("/userHome")
       }
     }
   })
-}});
+}
+});
 
 app.get("/userHome", function(req, res){
 
@@ -212,19 +208,22 @@ app.get("/userHome", function(req, res){
 
   } else {
 
-  User.findById(req.user.id, function(err, userTopics){
+  Topic.find({userId: req.user.id}, function(err, userTopics){
     if (err){
       console.log(err);
       res.redirect("/")
     } else {
       if (userTopics) {
        
-        res.render("userHome", {topicsForPage: userTopics.topics});
+        res.render("userHome", {topicsForPage: userTopics});
       }
     }
   })
 }});
 
+app.get("/singlePost", function(req, res){
+  res.render("singlePost");
+});
 
 app.get("/about", function(req, res){
   res.render("about", {aboutContent: aboutContent});
@@ -287,34 +286,55 @@ app.post("/compose", function(req, res){
 app.get("/posts/:postId", async function(req, res){
   const requestedPostId = req.params.postId;
 
-  //console.log(requestedPostId)
+  console.log(requestedPostId)
 
-  // let postObject = await User.findOne({
+  let postObject = await User.findOne({
 
-  //   'posts': {
+    'posts': {
     
-  //   $elemMatch: {
+      $elemMatch: {
     
-  //   'title': requestedPostId
+      '_id': requestedPostId
     
-  //   }
+      }
     
-  //   }
+    }
     
-  //   });
-    
-    //const post = postObject.posts;
-    
-    // for (let i = 0; i < post.length; i++) {
-    
-    // if (post.title === requestedPostId) {
-    //   console.log(post.title)
-    // }
-    
-    // }
- 
   });
-  
+    
+    const post = postObject.posts;
+    
+    post.forEach(function(singlePost) {
+
+      if( singlePost.id === requestedPostId) {
+        res.render("singlePost", {
+          title: singlePost.title,
+          content: singlePost.content
+        })
+      } 
+    })
+ 
+  });  
+
+  app.post("/chooseTopic", async function(req, res){
+    console.log(req.body.chosenTopic)
+
+    const requestedTopicTitle = req.body.chosenTopic;
+
+    let topicObject = await Topic.findOne({
+      'posts': {
+        $elemMatch: {
+          "topicTitle": requestedTopicTitle
+        }
+      }
+    })
+
+    // const post = postObject.posts;
+
+    console.log("narrowed down posts :" +topicObject)
+
+    
+  })
 
 app.post("/register", function(req, res){
 
@@ -347,7 +367,6 @@ app.post("/login", function(req, res){
     password: req.body.password,
 
   });
-
 
   req.login(user, function(err){
 
@@ -399,32 +418,38 @@ app.post("/createTopic", function(req, res){
   const newTopic = new Topic ({
     userId: yourUserId,
     title: yourTopicTitle
-
   });
 
-  User.findById(req.user.id, function(err, userFound){
-    if (err) {
-      console.log(err)
-    } else {
-      if(userFound) {
+  // const newPost = new Post ({
+  //   userId: yourUserId,
+  //   topicTitle: newTopic.title,
+  //   title: "Create a Post!",
+  //   content: "What do you want to remember?"
+  // })
 
-        const newPost = new Post ({
-          userId: yourUserId,
-          topicId: newTopic.id,
-          title: "Create a Post!",
-          content: "What do you want to remember?"
-        })
-
-        userFound.topics.push(newTopic);
-        userFound.posts.push(newPost);
-        userFound.save(function(){
-          res.redirect('/userHome')
-        })
-      }
-    }
+  //newTopic.posts.push(newPost);
+  newTopic.save(function(){
+    res.redirect('/userHome')
   })
+  
+})
 
-});
+app.post("/createAdditionalTopic", function(req, res){
+
+  const yourUserId = req.user.id;
+  const yourTopicTitle = req.body.additionalTopic;
+  
+  const newTopic = new Topic ({
+    userId: yourUserId,
+    title: yourTopicTitle
+
+  });
+    
+  newTopic.save(function(){
+    res.redirect('/userHome')
+    })
+})
+
 
 app.get('/logout', function(req, res){
   req.logout(function(err) {
