@@ -171,6 +171,8 @@ app.get("/post", function(req, res){
 
   } else {
 
+    console.log(req.params.topicId)
+
   Post.find({userId: req.user.id}, function(err, userPosts){
     if (err){
       console.log(err);
@@ -303,6 +305,7 @@ app.get("/posts/:postId", function(req, res){
             console.log(err)
             res.redirect("/userHome")
           } else {
+            
              res.render("post", {postsForPage: postsFromTopic})
           }
          })   
