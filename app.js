@@ -57,7 +57,7 @@ const topicSchema = new mongoose.Schema({
   userId: String,
   topicId: String,
   title: String,
-  posts: [postSchema],
+  posts: [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'}],
   createdAt: {
     type: Date, 
     default: () => Date.now()
@@ -171,7 +171,7 @@ app.get("/post", function(req, res){
 
   } else {
 
-  User.findById(req.user.id, function(err, userPosts){
+  Post.find({userId: req.user.id}, function(err, userPosts){
     if (err){
       console.log(err);
       res.redirect("/")
@@ -179,26 +179,13 @@ app.get("/post", function(req, res){
 
       if (userPosts) {
 
-        const postsForTopic = [];
-
-        firstPostTopicId = userPosts.posts[0].topicId;
-        
-
-        let posts = userPosts.posts;
-
-        posts.forEach(function(post){
-          if(post.topicId === firstPostTopicId) {
-            postsForTopic.push(post)
-          }
-        })
-        res.render("post", {postsForPage: postsForTopic});
-      } else {
-        res.redirect("/userHome")
-      }
+  
+        res.render("post", {postsForPage: userPosts});
     }
-  })
+  }})
 }
-});
+})
+
 
 app.get("/userHome", function(req, res){
 
@@ -265,74 +252,63 @@ app.post("/compose", function(req, res){
     content: yourPostContent
   });
 
-  User.findById(req.user.id, function(err, userFound){
-    if (err) {
-      console.log(err)
-    } else {
-      if(userFound) {
-        const yourTopicId = userFound.topics[0].id;
+  console.log("topic")
 
-        newPost.topicId = yourTopicId;
-        userFound.posts.push(newPost);
-        userFound.save(function(){
-          res.redirect('/post')
-        })
-      }
-    }
-  })
+  // User.findById(req.user.id, function(err, userFound){
+  //   if (err) {
+  //     console.log(err)
+  //   } else {
+  //     if(userFound) {
+  //       const yourTopicId = userFound.topics[0].id;
+
+  //       newPost.topicId = yourTopicId;
+  //       userFound.posts.push(newPost);
+  //       userFound.save(function(){
+  //         res.redirect('/post')
+  //       })
+  //     }
+  //   }
+  // })
 
 });
 
-app.get("/posts/:postId", async function(req, res){
+app.get("/posts/:postId", function(req, res){
   const requestedPostId = req.params.postId;
 
-  console.log(requestedPostId)
-
-  let postObject = await User.findOne({
-
-    'posts': {
-    
-      $elemMatch: {
-    
-      '_id': requestedPostId
-    
-      }
-    
+   Post.findOne({id: requestedPostId}, function(err, singlePost){
+    if(err) {
+      console.log(err)
+    } else {
+      res.render("singlePost", {
+        title: singlePost.title,
+        content: singlePost.content
+      })
     }
+   }
+  )});  
+
+  app.post("/chooseTopic", function(req, res){
     
-  });
-    
-    const post = postObject.posts;
-    
-    post.forEach(function(singlePost) {
+    const requestedTopicId = req.body.chosenTopic;
 
-      if( singlePost.id === requestedPostId) {
-        res.render("singlePost", {
-          title: singlePost.title,
-          content: singlePost.content
-        })
-      } 
-    })
- 
-  });  
-
-  app.post("/chooseTopic", async function(req, res){
-    console.log(req.body.chosenTopic)
-
-    const requestedTopicTitle = req.body.chosenTopic;
-
-    let topicObject = await Topic.findOne({
-      'posts': {
-        $elemMatch: {
-          "topicTitle": requestedTopicTitle
+    Topic.findOne({id: requestedTopicId}, function(err, foundTopic){
+      if (err){
+        console.log(err);
+        res.redirect("/")
+      } else {
+        if (foundTopic) {
+         
+         Post.find({topicId: requestedTopicId}, function(err, postsFromTopic){
+          if (err){
+            console.log(err)
+            res.redirect("/userHome")
+          } else {
+             res.render("post", {postsForPage: postsFromTopic})
+          }
+         })   
         }
       }
     })
-
-    // const post = postObject.posts;
-
-    console.log("narrowed down posts :" +topicObject)
-
     
   })
 
@@ -414,22 +390,24 @@ app.post("/createTopic", function(req, res){
 
   const yourUserId = req.user.id;
   const yourTopicTitle = req.body.firstTopic;
+
+  console.log(yourTopicTitle)
   
   const newTopic = new Topic ({
     userId: yourUserId,
     title: yourTopicTitle
   });
 
-  // const newPost = new Post ({
-  //   userId: yourUserId,
-  //   topicTitle: newTopic.title,
-  //   title: "Create a Post!",
-  //   content: "What do you want to remember?"
-  // })
+  const newPost = new Post ({
+    userId: yourUserId,
+    topicId: newTopic.id,
+    title: "Create a Post!",
+    content: "What do you want to remember?"
+  })
 
-  //newTopic.posts.push(newPost);
+  newPost.save();
   newTopic.save(function(){
-    res.redirect('/userHome')
+    res.redirect('/post')
   })
   
 })
