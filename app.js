@@ -171,8 +171,6 @@ app.get("/post", function(req, res){
 
   } else {
 
-    console.log(req.params.topicId)
-
   Post.find({userId: req.user.id}, function(err, userPosts){
     if (err){
       console.log(err);
@@ -254,23 +252,10 @@ app.post("/compose", function(req, res){
     content: yourPostContent
   });
 
-  console.log("topic")
 
-  // User.findById(req.user.id, function(err, userFound){
-  //   if (err) {
-  //     console.log(err)
-  //   } else {
-  //     if(userFound) {
-  //       const yourTopicId = userFound.topics[0].id;
-
-  //       newPost.topicId = yourTopicId;
-  //       userFound.posts.push(newPost);
-  //       userFound.save(function(){
-  //         res.redirect('/post')
-  //       })
-  //     }
-  //   }
-  // })
+        newPost.save(function(){
+          res.redirect('/post')
+        })
 
 });
 
@@ -409,6 +394,7 @@ app.post("/createTopic", function(req, res){
   })
 
   newPost.save();
+  newTopic.posts.push(newPost.id);
   newTopic.save(function(){
     res.redirect('/post')
   })
