@@ -274,31 +274,47 @@ app.get("/posts/:postId", function(req, res){
    }
   )});  
 
-  app.post("/chooseTopic", function(req, res){
+  // app.post("/chooseTopic", function(req, res){
     
-    const requestedTopicId = req.body.chosenTopic;
+  //   const requestedTopicId = req.body.chosenTopic;
 
-    Topic.findOne({id: requestedTopicId}, function(err, foundTopic){
-      if (err){
-        console.log(err);
-        res.redirect("/")
-      } else {
-        if (foundTopic) {
+  //   Topic.findOne({id: requestedTopicId}, function(err, foundTopic){
+  //     if (err){
+  //       console.log(err);
+  //       res.redirect("/")
+  //     } else {
+  //       if (foundTopic) {
          
-         Post.find({topicId: requestedTopicId}, function(err, postsFromTopic){
-          if (err){
-            console.log(err)
-            res.redirect("/userHome")
-          } else {
+  //        Post.find({topicId: requestedTopicId}, function(err, postsFromTopic){
+  //         if (err){
+  //           console.log(err)
+  //           res.redirect("/userHome")
+  //         } else {
             
-             res.render("post", {postsForPage: postsFromTopic})
-          }
-         })   
-        }
-      }
-    })
+  //            res.render("post", {postsForPage: postsFromTopic})
+  //         }
+  //        })   
+  //       }
+  //     }
+  //   })
     
-  })
+  // })
+
+  app.get("/topics/:topicId", function(req, res){
+    const requestedTopicId = req.params.topicId;
+
+    Topic.findOne({id: requestedTopicId}).populate('posts').exec((err, foundPosts) => {
+      res.render("topic", {
+        postsForPage: foundPosts.posts
+        
+      })
+        })
+        
+      }
+     
+    );  
+  
+
 
 app.post("/register", function(req, res){
 
