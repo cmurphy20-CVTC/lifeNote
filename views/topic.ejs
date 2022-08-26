@@ -19,14 +19,18 @@
 
     <% }) %>
   
-  <div class="col-sm-4">
-    <div class="card body">
-      <div class="card-body">
-        <a class="btn btn-danger btn-lg" href="/compose" role="button">
-          Compose
-        </a>
+    <form id="composePost" class="" action="/compose" method="post">
+      <div class="form-group">
+
+         <label>Title</label>
+        <input placeholder="Give it a catchy title!" class="form-control" type="text" name="postTitle">
+       
+        <label>Post</label>
+        <textarea class="form-control" name="postBody" rows="5" cols="30" placeholder="What do you want to remember for later?"></textarea>
       </div>
-    </div>
-  </div>
+      <button class="btn btn-primary" type="submit" name="button">Publish</button>
+    </form>
+
+    <button id="showCompose" class="btn btn-primary" type="submit" name="Compose">Compose</button>
 
 <%- include("partials/footer"); -%>

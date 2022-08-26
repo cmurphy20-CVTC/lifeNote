@@ -243,18 +243,20 @@ app.get("/register", function(req, res){
 app.post("/compose", function(req, res){
 
   const yourPostId = req.user.id;
+  const yourTopicId = req.params.topicId;
   const yourPostTitle = req.body.postTitle;
   const yourPostContent = req.body.postBody; 
   
   const newPost = new Post ({
     userId: yourPostId,
+    topicId: yourTopicId,
     title: yourPostTitle,
     content: yourPostContent
   });
 
 
         newPost.save(function(){
-          res.redirect('/post')
+          res.redirect('/topics/:topicId')
         })
 
 });
