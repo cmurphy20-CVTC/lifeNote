@@ -262,11 +262,16 @@ app.post("/compose", function(req, res){
           if(err) {
             console.log(err)
           } else {
-            newPost.save();
+            
+            console.log(saveTopic)
             saveTopic.posts.push(newPost.id);
-            
-              res.redirect('/userHome')
-            
+
+            saveTopic.save();
+            newPost.save(function(err){
+              if (!err){
+                  res.redirect("/userHome");
+              }
+            });        
           } 
         })
 });
@@ -275,7 +280,10 @@ app.post("/compose", function(req, res){
 app.get("/posts/:postId", function(req, res){
   const requestedPostId = req.params.postId;
 
-   Post.findOne({id: requestedPostId}, function(err, singlePost){
+  console.log(requestedPostId)
+
+
+   Post.findOne({_id: requestedPostId}, function(err, singlePost){
     if(err) {
       console.log(err)
     } else {
@@ -285,7 +293,8 @@ app.get("/posts/:postId", function(req, res){
       })
     }
    }
-  )});  
+   )
+  });  
 
   // app.post("/chooseTopic", function(req, res){
     
@@ -313,7 +322,7 @@ app.get("/posts/:postId", function(req, res){
     
   // })
 
-  app.get("/topics/:topicId", function(req, res){
+  app.get("/topics/:topicId/posts", function(req, res){
     const requestedTopicId = req.params.topicId;
     
     Post.find({topicId: requestedTopicId}, function(err, foundPosts) {
