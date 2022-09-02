@@ -242,24 +242,35 @@ app.get("/register", function(req, res){
 
 app.post("/compose", function(req, res){
 
-  const yourPostId = req.user.id;
-  const yourTopicId = req.params.topicId;
+  const yourUserId = req.user.id;
+  const yourTopicId = req.body.publishPost;
   const yourPostTitle = req.body.postTitle;
   const yourPostContent = req.body.postBody; 
+
+  console.log("yourTopicId " + yourTopicId)
   
   const newPost = new Post ({
-    userId: yourPostId,
+    userId: yourUserId,
     topicId: yourTopicId,
     title: yourPostTitle,
     content: yourPostContent
   });
 
 
-        newPost.save(function(){
-          res.redirect('/topics/:topicId')
+        // FORGOT TO SAVE THE NEW POST INTO THE TOPIC DUMBASS
+        Topic.findOne({id: yourTopicId}, function(err, saveTopic){
+          if(err) {
+            console.log(err)
+          } else {
+            newPost.save();
+            saveTopic.posts.push(newPost.id);
+            
+              res.redirect('/userHome')
+            
+          } 
         })
-
 });
+
 
 app.get("/posts/:postId", function(req, res){
   const requestedPostId = req.params.postId;
@@ -304,17 +315,20 @@ app.get("/posts/:postId", function(req, res){
 
   app.get("/topics/:topicId", function(req, res){
     const requestedTopicId = req.params.topicId;
+    
+    Post.find({topicId: requestedTopicId}, function(err, foundPosts) {
 
-    Topic.findOne({id: requestedTopicId}).populate('posts').exec((err, foundPosts) => {
-      res.render("topic", {
-        postsForPage: foundPosts.posts
-        
-      })
+      if(err) {
+        console.log(err)
+      } else {
+        res.render("topic", {
+          postsForPage: foundPosts
+          
         })
-        
-      }
-     
-    );  
+      }     
+    })
+  } 
+);  
   
 
 
@@ -397,8 +411,6 @@ app.post("/createTopic", function(req, res){
   const yourUserId = req.user.id;
   const yourTopicTitle = req.body.firstTopic;
 
-  console.log(yourTopicTitle)
-  
   const newTopic = new Topic ({
     userId: yourUserId,
     title: yourTopicTitle
@@ -409,14 +421,26 @@ app.post("/createTopic", function(req, res){
     topicId: newTopic.id,
     title: "Create a Post!",
     content: "What do you want to remember?"
-  })
+  })  
 
-  newPost.save();
-  newTopic.posts.push(newPost.id);
-  newTopic.save(function(){
-    res.redirect('/post')
+  User.findOne({id: yourUserId}, function(err, foundUser){
+
+    if(err) {
+      console.log(err)
+    } else {
+      
+      foundUser.topics.push(newTopic.id)
+      newTopic.posts.push(newPost.id);
+
+      foundUser.save();
+      newTopic.save();
+      newPost.save(function(err){
+        if (!err){
+            res.redirect("/userHome");
+        }
+      });      
+    }
   })
-  
 })
 
 app.post("/createAdditionalTopic", function(req, res){
@@ -429,10 +453,32 @@ app.post("/createAdditionalTopic", function(req, res){
     title: yourTopicTitle
 
   });
+
+  const newPost = new Post ({
+    userId: yourUserId,
+    topicId: newTopic.id,
+    title: "Create a Post!",
+    content: "What do you want to remember?"
+  })
+
+  User.findOne({id: yourUserId}, function(err, foundUser){
+    if(err){
+      console.log(err)
+    } else {
+     
+      foundUser.topics.push(newTopic.id)
+      newTopic.posts.push(newPost.id); 
+
+      foundUser.save();
+      newPost.save();
+      newTopic.save(function(err){
+        if (!err){
+            res.redirect("/userHome");
+        }
+      }); 
+    }
+  })
     
-  newTopic.save(function(){
-    res.redirect('/userHome')
-    })
 })
 
 
