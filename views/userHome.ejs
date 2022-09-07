@@ -9,33 +9,16 @@
 
 </div>
 
-<form action="/chooseTopic" method="POST">
+<a href="/composePost">Create New Post</a>
+
+  <%  postsForPage.forEach(function(post) { %>
+
+    <h4><%=post.title%></h4>
   
-
-<%  topicsForPage.forEach(function(topic) { %>
-
-  <div class="form-group">
-
-    <label for="text"><%=topic.title%></label>
-    <a href="/topics/<%=topic._id%>/posts">Read More</a>
-    <!-- <input type="radio" class="form-control" name="chosenTopic" value="<%=topic.id%>" id="<%topic.id%>"> -->
- 
-</div>
-
-    <% }) %>
-
-    <!-- <button type="submit" value="chosenTopicBtn" class="btn btn-dark">Confirm</button> -->
-
-</form>
-
-    <form action="/createAdditionalTopic" method="POST">
-      <div class="form-group">
-        <label for="additionalTopic">Topic</label>
-        <input type="text" class="form-control" name="additionalTopic" placeholder="Recipes">
-      </div>
+    <p><%=post.content.substring(0, 100) + " ..."%>
+    <a href="/posts/<%=post._id%>">Read More</a>
+    </p>
   
-      <button type="submit" class="btn btn-dark">Confirm</button>
-    </form>
-
+  <% }) %>
 
 <%- include("partials/footer"); -%>

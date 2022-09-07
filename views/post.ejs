@@ -9,24 +9,19 @@
 
 </div>
 
-<%  postsForPage.forEach(function(post) { %>
-
-  <h4><%=post.title%> -- post.createdAt%></h4>
-
-  <p><%=post.content.substring(0, 100) + " ..."%>
-  <a href="/posts/<%=post._id%>">Read More</a>
-  </p>
-
-    <% }) %>
+<h2><%= title%></h2>
+<p><%= content%></p>
   
   <div class="col-sm-4">
     <div class="card body">
       <div class="card-body">
-        <a class="btn btn-danger btn-lg" href="/compose" role="button">
+        <a class="btn btn-danger btn-lg" href="/userHome" role="button">
           Compose
         </a>
       </div>
     </div>
   </div>
+
+  <div><a class="btn btn-light btn-lg" href="/userHome" role="button">Back</a></div>
 
 <%- include("partials/footer"); -%>

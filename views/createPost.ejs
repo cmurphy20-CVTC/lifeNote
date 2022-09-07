@@ -11,8 +11,8 @@
 
 <h3>Welcome to LifeNote!</h3>
 <p>This app will help you remember everything in your life.</p>
-<p>First create a topic you would like to focus on. For example a topic can be about the people in your life.</p>
-<p>Don't worry you will be able to create more topics later on.</p>
+<p>First create a post you would like to focus on. For example a recipe you want to remember.</p>
+<p>Don't worry you will be able to create more posts later on.</p>
 
   <div class="row">
     <div class="col-sm-8">
@@ -20,16 +20,19 @@
         <div class="card-body">
 
           <!-- Makes POST request to /createTopics route -->
-          <form action="/createTopic" method="POST">
+          <form action="/createPost" method="POST">
             <div class="form-group">
-              <label for="firstTopic">First Topic</label>
-              <input type="text" class="form-control" name="firstTopic" placeholder="Recipes">
+              <label for="firstPost">First Post</label>
+              <input type="text" class="form-control" name="firstPostTitle" placeholder="Recipes">
             </div>
+            <label>Post</label>
+            <textarea class="form-control" name="firstPostBody" rows="5" cols="30" placeholder="What do you want to remember for later?"></textarea>
+          </div>
         
             <button type="submit" class="btn btn-dark">Confirm</button>
           </form>
 
-          <p>The next step will be to create your first post about this topic! Click confirm to continue.</p>
+          <p>Click confirm to continue.</p>
 
         </div>
       </div>
