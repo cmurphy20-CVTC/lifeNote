@@ -249,6 +249,18 @@ app.post("/compose", function(req, res){
         })
 });
 
+app.post("/delete", function(req, res){
+  
+  const postId = req.body.selectedPost;
+
+  Post.findOneAndDelete({id: postId}, function(err){
+    if(err) {
+      console.log(err)
+    } else {
+      res.redirect("/userHome")
+    }
+  })
+})
 
 app.get("/posts/:postId", function(req, res){
   const requestedPostId = req.params.postId;
@@ -258,6 +270,7 @@ app.get("/posts/:postId", function(req, res){
       console.log(err)
     } else {
       res.render("post", {
+        id: requestedPostId,
         title: singlePost.title,
         content: singlePost.content
       })

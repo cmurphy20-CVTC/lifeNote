@@ -15,9 +15,11 @@
   <div class="col-sm-4">
     <div class="card body">
       <div class="card-body">
-        <a class="btn btn-danger btn-lg" href="/userHome" role="button">
-          Compose
-        </a>
+        <form action="/delete" method="post">
+        <button class="btn btn-danger btn-lg" name="selectedPost" value="<%= id %>" type="submit">
+          Delete
+        </button>
+      </form>
       </div>
     </div>
   </div>
