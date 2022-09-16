@@ -3,6 +3,7 @@ require('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
+
 const mongoose = require("mongoose");
 const _ = require("lodash");
 const session = require('express-session');
@@ -135,6 +136,14 @@ app.get("/register", function(req, res){
   res.render("register");
 });
 
+app.get("/homeTest", function(req, res){
+
+       
+        res.render("homeTest");
+      }
+  )
+
+
 // step one in creating account
 app.get("/createPost", function(req, res){
   if(req.isAuthenticated()) {
@@ -230,7 +239,6 @@ app.post("/compose", function(req, res){
     title: yourPostTitle,
     content: yourPostContent
   });
-
 
   User.findOne({id: yourUserId}, function(err, foundUser){
           if(err) {
