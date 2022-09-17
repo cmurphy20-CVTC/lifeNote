@@ -3,11 +3,12 @@
     <h1>Home</h1>
     <p> <%= startingContent %> </p>
 
+    <div class="container-fluid">
      <!-- Features -->
 
   <section class="white-section" id="features">
 
-    <div class="container-fluid">
+    
 
       <div class="row">
         <div class="feature-box col-lg-4">
@@ -30,7 +31,7 @@
       </div>
 
 
-    </div>
+   
   </section>
 
      <!-- Testimonials -->
@@ -62,13 +63,19 @@
       </div>
     
       <a class="carousel-control-prev" href="#testimonial-carousel" role="button" data-slide="prev">
-        <span class="carousel-control-prev-icon" ></span>
+        <span id="controls" class="carousel-control-prev-icon" ></span>
         
       </a>
-      <a class="carousel-control-next" href="#testimonial-carousel" role="button" data-slide="next">
-    <span class="carousel-control-next-icon" ></span>
+      <a  class="carousel-control-next" href="#testimonial-carousel" role="button" data-slide="next">
+    <span  class="carousel-control-next-icon" ></span>
     
       </a>
+    </div>
+    <div class="container-fluid press-imgs">
+      <img class="press-logo" src="images/techcrunch.png" alt="tc-logo">
+      <img class="press-logo" src="images/tnw.png" alt="tnw-logo">
+      <img class="press-logo" src="images/bizinsider.png" alt="biz-insider-logo">
+      <img class="press-logo" src="images/mashable.png" alt="mashable-logo">
     </div>
    </div>
 
@@ -81,6 +88,6 @@
         <button class="btn btn-success btn-lg"><a href="/login">Login</a></button>
     </div>
     
-        
+  </div>     
 
 <%- include("partials/footer"); -%>

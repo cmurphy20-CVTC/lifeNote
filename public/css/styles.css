@@ -6,6 +6,7 @@ html {
 body {
   background-color: #FAF9F6;
   
+  
 }
 
 .btn {
@@ -16,7 +17,10 @@ body {
 .container-fluid {
     padding-top: 70px;
     padding-bottom: 70px;
+    
 }
+
+
 .navbar {
     padding-top: 15px;
     padding-bottom: 15px;
@@ -72,17 +76,21 @@ a:focus {
 .feature-box {
   align-items: center;
 }
+
+
 /* Testimonial Section */
 
-#testimonials {
-  background-color: #65d842;
-}
+
 
 .testimonial-text {
   font-size: 3rem;
   line-height: 1.5;
 }
 
+#controls {
+  color: #000;
+  
+}
 
 .carousel-item{
   width: 75%;
@@ -90,11 +98,17 @@ a:focus {
 }
 
 #press {
-  background-color: #ef8172;
   padding-bottom: 3%;
+  margin-left: 19%;
+}
+
+.press-imgs {
+  margin-left: 0%;
+  
 }
 
 .press-logo {
   width: 15%;
-  margin: 20px 20px 50px;
+  margin: 20px 50px 50px;
+
 }

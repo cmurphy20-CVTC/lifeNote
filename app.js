@@ -200,6 +200,10 @@ app.get("/singlePost", function(req, res){
   res.render("singlePost");
 });
 
+app.get("/features", function(req, res){
+  res.render("features");
+});
+
 app.get("/about", function(req, res){
   res.render("about", {aboutContent: aboutContent});
 });
