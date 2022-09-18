@@ -1,0 +1,20 @@
+<%- include("partials/header"); -%>
+    <h1>Edit Note</h1>
+
+    <a class="btn btn-light btn-lg" href="/logout" role="button">Log Out</a>
+    
+    <form class="" action="/edit" method="post">
+      <div class="form-group">
+
+         <label>Title</label>
+        <input value="<%= title %>" class="form-control" type="text" name="editTitle">
+       
+        <label>Note</label>
+        <textarea class="form-control" name="editBody" rows="5" cols="30"><%= content %></textarea>
+      </div>
+      <button class="btn btn-primary" type="submit" value="<%= id %>" name="editBtn">Update</button>
+    </form>
+
+    <div><a class="btn btn-light btn-lg" href="/userHome" role="button">Back</a></div>
+
+<%- include("partials/footer"); -%>

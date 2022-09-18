@@ -11,19 +11,25 @@
 
 <h2><%= title%></h2>
 <p><%= content%></p>
+<p id="postId"><%= id %></p>
+
+<div><a class="btn btn-light btn-lg btnTest"  role="button">Test</a></div>
   
-  <div class="col-sm-4">
-    <div class="card body">
-      <div class="card-body">
+  
         <form action="/delete" method="post">
         <button class="btn btn-danger btn-lg" name="selectedPost" value="<%= id %>" type="submit">
           Delete
         </button>
       </form>
-      </div>
-    </div>
-  </div>
+
+      <form action="/selectEdit" method="post">
+        <button class="btn btn btn-lg" name="selectedEdit" value="<%= id %>" type="submit">
+          Edit
+        </button>
+      </form>
+      
 
   <div><a class="btn btn-light btn-lg" href="/userHome" role="button">Back</a></div>
+
 
 <%- include("partials/footer"); -%>

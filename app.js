@@ -261,6 +261,36 @@ app.post("/compose", function(req, res){
         })
 });
 
+app.post("/selectEdit", function(req, res){
+  
+  const noteId = req.body.selectedEdit;
+
+  Post.findOne({id: noteId}, function(err, foundNote){
+    if(err) {
+      console.log(err)
+    } else {
+
+      res.render("editNote", {title: foundNote.title, content: foundNote.content, id: foundNote.id})
+    }
+  })
+});
+
+app.post("/edit", function(req, res){
+  
+  const noteId = req.body.editBtn;
+  const editTitle = req.body.editTitle;
+  const editBody = req.body.editBody;
+  const filter = {id: noteId};
+
+  Post.findOneAndUpdate(filter, {"$set": {title: editTitle, content: editBody}}, function(err, editedNote){
+    if(err) {
+      console.log(err)
+    } else {
+      res.redirect("/userHome")
+    }
+  })
+});
+
 app.post("/delete", function(req, res){
   
   const postId = req.body.selectedPost;
@@ -272,7 +302,7 @@ app.post("/delete", function(req, res){
       res.redirect("/userHome")
     }
   })
-})
+});
 
 app.get("/posts/:postId", function(req, res){
   const requestedPostId = req.params.postId;
