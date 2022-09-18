@@ -9,14 +9,14 @@
 
 </div>
 
-<a href="/composePost">Create New Post</a>
+<a href="/composeNote">Create New Note</a>
 
-  <%  postsForPage.forEach(function(post) { %>
+  <%  notesForPage.forEach(function(note) { %>
 
-    <h4><%=post.title%></h4>
+    <h4><%=note.title%></h4>
   
-    <p><%=post.content.substring(0, 100) + " ..."%>
-    <a href="/posts/<%=post._id%>">Read More</a>
+    <p><%=note.content.substring(0, 100) + " ..."%>
+    <a href="/notes/<%=note._id%>">Read More</a>
     </p>
   
   <% }) %>

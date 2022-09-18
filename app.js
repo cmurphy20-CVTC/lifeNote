@@ -34,7 +34,7 @@ app.use(passport.session());
 
 mongoose.connect(process.env.DB_LINK, {useNewUrlParser: true});
 
-const postSchema = new mongoose.Schema ({
+const NoteSchema = new mongoose.Schema ({
 
   userId: String,
   title: String,
@@ -50,7 +50,7 @@ const postSchema = new mongoose.Schema ({
 
 });
 
-const Post = mongoose.model("Post", postSchema);
+const Note = mongoose.model("Note", NoteSchema);
 
 const userSchema = new mongoose.Schema ({
 
@@ -60,7 +60,7 @@ const userSchema = new mongoose.Schema ({
   password: String,
   provider: String, // values: 'local', 'google', 'facebook'
   email: String,
-  posts: [{type: mongoose.Schema.Types.ObjectId, ref: 'Post'}],
+  notes: [{type: mongoose.Schema.Types.ObjectId, ref: 'Note'}],
   createdAt: {
     type: Date, 
     default: () => Date.now()
@@ -92,7 +92,7 @@ passport.deserializeUser(function(id, done) {
 passport.use(new GoogleStrategy({
   clientID: process.env.CLIENT_ID,
   clientSecret: process.env.CLIENT_SECRET,
-  callbackURL: "http://localhost:3000/auth/google/post",
+  callbackURL: "http://localhost:3000/auth/google/Note",
   userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
 },
 function(accessToken, refreshToken, profile, cb) {
@@ -113,11 +113,11 @@ app.get("/auth/google", passport.authenticate('google', {
 
 }));
 
-app.get('/auth/google/post', 
+app.get('/auth/google/Note', 
   passport.authenticate('google', { failureRedirect: '/login' }),
   function(req, res) {
     // Successful authentication, redirect home.
-    res.redirect('/post');
+    res.redirect('/Note');
   });
 
 app.get("/", function(req, res){
@@ -145,15 +145,15 @@ app.get("/homeTest", function(req, res){
 
 
 // step one in creating account
-app.get("/createPost", function(req, res){
+app.get("/createNote", function(req, res){
   if(req.isAuthenticated()) {
-    res.render("createPost");
+    res.render("createNote");
    } else {
     res.redirect("/")
    }
 });
 
-app.get("/post", function(req, res){
+app.get("/note", function(req, res){
 
   if(!req.isAuthenticated() || !req.user.id) {
 
@@ -161,14 +161,14 @@ app.get("/post", function(req, res){
 
   } else {
 
-  Post.find({userId: req.user.id}, function(err, userPosts){
+  Note.find({userId: req.user.id}, function(err, userNotes){
     if (err){
       console.log(err);
       res.redirect("/")
     } else {
 
-      if (userPosts) {
-        res.render("post", {postsForPage: userPosts});
+      if (userNotes) {
+        res.render("note", {notesForPage: userNotes});
     }
   }})
 }
@@ -183,22 +183,18 @@ app.get("/userHome", function(req, res){
 
   } else {
 
-  Post.find({userId: req.user.id}, function(err, userPosts){
+  Note.find({userId: req.user.id}, function(err, userNotes){
     if (err){
       console.log(err);
       res.redirect("/")
     } else {
-      if (userPosts) {
+      if (userNotes) {
        
-        res.render("userHome", {postsForPage: userPosts});
+        res.render("userHome", {notesForPage: userNotes});
       }
     }
   })
 }});
-
-app.get("/singlePost", function(req, res){
-  res.render("singlePost");
-});
 
 app.get("/features", function(req, res){
   res.render("features");
@@ -216,9 +212,9 @@ app.get("/editProfile", function(req, res){
   res.render("editProfile");
 });
 
-app.get("/composePost", function(req, res){
+app.get("/composeNote", function(req, res){
    if(req.isAuthenticated()) {
-    res.render("composePost");
+    res.render("composeNote");
    } else {
     res.redirect("/")
    }
@@ -235,13 +231,13 @@ app.get("/register", function(req, res){
 app.post("/compose", function(req, res){
 
   const yourUserId = req.user.id;
-  const yourPostTitle = req.body.postTitle;
-  const yourPostContent = req.body.postBody; 
+  const yourNoteTitle = req.body.noteTitle;
+  const yourNoteContent = req.body.noteBody; 
   
-  const newPost = new Post ({
+  const newNote = new Note ({
     userId: yourUserId,
-    title: yourPostTitle,
-    content: yourPostContent
+    title: yourNoteTitle,
+    content: yourNoteContent
   });
 
   User.findOne({id: yourUserId}, function(err, foundUser){
@@ -249,10 +245,10 @@ app.post("/compose", function(req, res){
             console.log(err)
           } else {
             
-            foundUser.posts.push(newPost.id);
+            foundUser.notes.push(newNote.id);
 
             foundUser.save();
-            newPost.save(function(err){
+            newNote.save(function(err){
               if (!err){
                   res.redirect("/userHome");
               }
@@ -265,7 +261,7 @@ app.post("/selectEdit", function(req, res){
   
   const noteId = req.body.selectedEdit;
 
-  Post.findOne({id: noteId}, function(err, foundNote){
+  Note.findOne({_id: noteId}, function(err, foundNote){
     if(err) {
       console.log(err)
     } else {
@@ -280,9 +276,9 @@ app.post("/edit", function(req, res){
   const noteId = req.body.editBtn;
   const editTitle = req.body.editTitle;
   const editBody = req.body.editBody;
-  const filter = {id: noteId};
+  const filter = {_id: noteId};
 
-  Post.findOneAndUpdate(filter, {"$set": {title: editTitle, content: editBody}}, function(err, editedNote){
+  Note.findOneAndUpdate(filter, {"$set": {title: editTitle, content: editBody}}, function(err){
     if(err) {
       console.log(err)
     } else {
@@ -293,9 +289,9 @@ app.post("/edit", function(req, res){
 
 app.post("/delete", function(req, res){
   
-  const postId = req.body.selectedPost;
+  const noteId = req.body.selectedNote;
 
-  Post.findOneAndDelete({id: postId}, function(err){
+  Note.findOneAndDelete({_id: noteId}, function(err){
     if(err) {
       console.log(err)
     } else {
@@ -304,17 +300,17 @@ app.post("/delete", function(req, res){
   })
 });
 
-app.get("/posts/:postId", function(req, res){
-  const requestedPostId = req.params.postId;
+app.get("/notes/:noteId", function(req, res){
+  const requestedNoteId = req.params.noteId;
 
-   Post.findOne({_id: requestedPostId}, function(err, singlePost){
+   Note.findOne({_id: requestedNoteId}, function(err, singleNote){
     if(err) {
       console.log(err)
     } else {
-      res.render("post", {
-        id: requestedPostId,
-        title: singlePost.title,
-        content: singlePost.content
+      res.render("note", {
+        id: requestedNoteId,
+        title: singleNote.title,
+        content: singleNote.content
       })
     }
    }
@@ -336,7 +332,7 @@ app.post("/register", function(req, res){
     } else {
 
       passport.authenticate("local")(req, res, function(){
-        res.redirect("/createPost");
+        res.redirect("/createNote");
 
       })
     }
@@ -384,7 +380,7 @@ app.post("/editProfile", function(req, res){
       if(userFound) {
         userFound.changePassword(oldPassword, newPassword, function(err){
           userFound.save(function(){
-            res.redirect('/post')
+            res.redirect('/Note')
         })
        
         })
@@ -395,16 +391,16 @@ app.post("/editProfile", function(req, res){
 
 });
 
-app.post("/createPost", function(req, res){
+app.post("/createNote", function(req, res){
 
   const yourUserId = req.user.id;
-  const yourTopicTitle = req.body.firstPostTitle;
-  const yourPostContent = req.body.firstPostBody;
+  const yourNoteTitle = req.body.firstNoteTitle;
+  const yourNoteContent = req.body.firstNoteBody;
 
-  const newPost = new Post ({
+  const newNote = new Note ({
     userId: yourUserId,
-    title: yourTopicTitle,
-    content: yourPostContent
+    title: yourNoteTitle,
+    content: yourNoteContent
   }); 
 
   User.findOne({id: yourUserId}, function(err, foundUser){
@@ -413,10 +409,10 @@ app.post("/createPost", function(req, res){
       console.log(err)
     } else {
       
-      foundUser.posts.push(newPost.id)
+      foundUser.notes.push(newNote.id)
 
       foundUser.save();
-      newPost.save(function(err){
+      newNote.save(function(err){
         if (!err){
             res.redirect("/userHome");
         }

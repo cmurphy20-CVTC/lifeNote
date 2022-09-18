@@ -11,13 +11,13 @@
 
 <h2><%= title%></h2>
 <p><%= content%></p>
-<p id="postId"><%= id %></p>
+<p id="noteId"><%= id %></p>
 
 <div><a class="btn btn-light btn-lg btnTest"  role="button">Test</a></div>
   
   
         <form action="/delete" method="post">
-        <button class="btn btn-danger btn-lg" name="selectedPost" value="<%= id %>" type="submit">
+        <button class="btn btn-danger btn-lg" name="selectedNote" value="<%= id %>" type="submit">
           Delete
         </button>
       </form>
