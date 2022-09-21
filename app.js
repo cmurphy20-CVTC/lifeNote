@@ -61,6 +61,7 @@ const userSchema = new mongoose.Schema ({
   provider: String, // values: 'local', 'google', 'facebook'
   email: String,
   notes: [{type: mongoose.Schema.Types.ObjectId, ref: 'Note'}],
+  profileColor: {type: String, default: "default"},  
   createdAt: {
     type: Date, 
     default: () => Date.now()

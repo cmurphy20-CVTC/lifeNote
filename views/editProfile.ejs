@@ -12,24 +12,27 @@
         <h3>Change Your Profile Color</h3>
         <!-- Makes POST request to /editProfile route -->
         <form action="/editProfileColor" method="POST">
-          <div class="form-group">
+          <div class="form-group profileColors">
             <label for="text">Default:</label>
-            <input type="radio" class="form-control" name="defaultColor" value="Default">
+            <input id="default" type="radio" class="form-control" name="defaultColor" value="Default">
           </div>
-          <div class="form-group">
+          <div class="form-group profileColors">
             <label for="text">Blue:</label>
             <input id="forBlue" type="radio" class="form-control" name="blue" value="Blue">
           </div>
-          <div class="form-group">
+          <div class="form-group profileColors">
             <label for="text">Red:</label>
-            <input type="radio" class="form-control" name="red" value="Red">
+            <input id="forRed" type="radio" class="form-control" name="red" value="Red">
           </div>
-          <div class="form-group">
+          <div class="form-group profileColors">
             <label for="text">Purple:</label>
-            <input type="radio" class="form-control" name="purple" value="Purple">
+            <input id="forPurple" type="radio" class="form-control" name="purple" value="Purple">
           </div>
-          <button id="changePassBtn" type="submit" class="btn btn-dark">Change Color</button>
+         
+          <button id="changeColorBtn" type="submit" class="btn btn-dark">Set Color</button>
         </form>
+
+        <button id="previewBtn" type="submit" class="btn btn-light">Preview Color</button>
 
         <h3>Change Your Password</h3>
 
@@ -37,11 +40,11 @@
         <form action="/editProfile" method="POST">
           <div class="form-group">
             <label for="password">Current Password</label>
-            <input type="password" class="form-control" name="currentPassword">
+            <input type="password" class="form-control" name="currentPassword" autocomplete="off">
           </div>
           <div class="form-group">
             <label for="password">New Password</label>
-            <input id="newPassword" type="password" class="form-control" name="newPassword">
+            <input id="newPassword" type="password" class="form-control" name="newPassword" autocomplete="off">
           </div>
           <button id="changePassBtn" type="submit" class="btn btn-dark">Change Password</button>
         </form>
