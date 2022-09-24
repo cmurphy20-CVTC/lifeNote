@@ -137,14 +137,6 @@ app.get("/register", function(req, res){
   res.render("register");
 });
 
-app.get("/homeTest", function(req, res){
-
-       
-        res.render("homeTest");
-      }
-  )
-
-
 // step one in creating account
 app.get("/createNote", function(req, res){
   if(req.isAuthenticated()) {
@@ -175,7 +167,6 @@ app.get("/note", function(req, res){
 }
 })
 
-
 app.get("/userHome", function(req, res){
 
   if(!req.isAuthenticated() || !req.user.id) {
@@ -184,17 +175,21 @@ app.get("/userHome", function(req, res){
 
   } else {
 
-  Note.find({userId: req.user.id}, function(err, userNotes){
-    if (err){
-      console.log(err);
-      res.redirect("/")
-    } else {
-      if (userNotes) {
-       
-        res.render("userHome", {notesForPage: userNotes});
-      }
-    }
-  })
+    User.findOne({userColor: req.user.profileColor}, function(err, userColor){
+      Note.find({userId: req.user.id}, function(err, userNotes){
+        if (err){
+          console.log(err);
+          res.redirect("/")
+        } else {
+          if (userNotes) {
+           
+            res.render("userHome", {notesForPage: userNotes, chosenColor: userColor});
+          }
+        }
+      })
+    })
+
+
 }});
 
 app.get("/features", function(req, res){
@@ -229,6 +224,29 @@ app.get("/register", function(req, res){
   res.render("register");
 });
 
+app.post("/searchNotes", function(req, res){
+
+  const yourUserId = req.user.id;
+  const yoursearchedTitle = req.body.searchedNoteValue;
+  
+
+  Note.find({userId: yourUserId, title: {$regex: yoursearchedTitle, $options:'i'}}, function(err, searchedNotes){
+          if(err) {
+            console.log(err)
+          } else {
+
+            if(searchedNotes.title === "") {
+              searchedNotes = {title: "No match", content: "Try searching again."}
+
+              res.render("userHome", {notesForPage: searchedNotes})
+            } else {
+            
+              res.render("userHome", {notesForPage: searchedNotes})
+            }      
+          } 
+        })
+});
+
 app.post("/compose", function(req, res){
 
   const yourUserId = req.user.id;
@@ -241,7 +259,7 @@ app.post("/compose", function(req, res){
     content: yourNoteContent
   });
 
-  User.findOne({id: yourUserId}, function(err, foundUser){
+  User.findOne({_id: yourUserId}, function(err, foundUser){
           if(err) {
             console.log(err)
           } else {

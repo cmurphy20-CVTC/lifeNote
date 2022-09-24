@@ -9,6 +9,18 @@
 
 </div>
 
+<div>
+<form action="/searchNotes" method="POST">
+  <div class="form-group">
+    <label for="searchedNote">Search Notes by Title:</label>
+    <input type="text" class="form-control" name="searchedNoteValue" autocomplete="on">
+  </div>
+  <button id="searchNotesBtn" type="submit" class="btn btn-dark">Search</button>
+  <button><a href="/userHome">Reset</a></button>
+</form>
+</div>
+
+
 <a href="/composeNote">Create New Note</a>
 
   <%  notesForPage.forEach(function(note) { %>
