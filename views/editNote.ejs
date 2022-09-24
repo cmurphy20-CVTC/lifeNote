@@ -1,6 +1,16 @@
 <%- include("partials/header"); -%>
     <h1>Edit Note</h1>
 
+    <div class="dropdown">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Options
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="/editProfile">Edit Profile</a>
+        <a class="dropdown-item" href="/logout">Log Out</a>
+      </div>
+    </div>
+
     <a class="btn btn-light btn-lg" href="/logout" role="button">Log Out</a>
     
     <form class="" action="/edit" method="post">
