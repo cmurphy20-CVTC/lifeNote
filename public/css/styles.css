@@ -5,8 +5,7 @@ html {
 
 body {
   background-color: #FAF9F6;
-  
-  
+  font-family: Open Sans Bold;
 }
 
 .btn {
@@ -15,7 +14,7 @@ body {
 }
 
 .container-fluid {
-    padding-top: 70px;
+    padding-top: 40px;
     padding-bottom: 20px;
     
 }
@@ -39,9 +38,13 @@ body {
   font-size: 175%;
 }
 
-
 h1 {
-  margin: 1.5%;
+  text-align: center;
+  margin: 2%;
+}
+
+p {
+  font-size: 25px;
 }
 
 .footer-padding {
@@ -72,11 +75,11 @@ h1 {
   margin-bottom: 5%;
 }
 
- a {
+ .btn-success > a, .nav-item > a {
   color: #fff;
 }
 
-a:hover {
+.btn-success > a:hover, .nav-item > a {
   color: #fff;
   text-decoration: none;
 }
@@ -96,11 +99,14 @@ a:focus {
   max-height: 125px;
 }
 
-
 .feature-box {
-  align-items: center;
+  text-align: center;
 }
 
+.icon {
+  color: #65d842;
+  margin-bottom: 1rem;
+}
 
 /* Testimonial Section */
 
