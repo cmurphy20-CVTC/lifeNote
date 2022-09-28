@@ -16,7 +16,7 @@ body {
 
 .container-fluid {
     padding-top: 70px;
-    padding-bottom: 70px;
+    padding-bottom: 20px;
     
 }
 
@@ -55,8 +55,12 @@ body {
 }
 
 #button_reg {
-  margin-top: 10%;
+  margin-top: 5%;
   text-align: center;
+}
+
+#button_reg > h2, h3 {
+  margin-bottom: 5%;
 }
 
 a:hover, 
@@ -109,6 +113,6 @@ a:focus {
 
 .press-logo {
   width: 15%;
-  margin: 20px 50px 50px;
+  margin: 15px 50px 15px;
 
 }
