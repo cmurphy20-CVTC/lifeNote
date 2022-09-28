@@ -35,6 +35,15 @@ body {
     color: #fff !important;
 }
 
+.nav-item > a {
+  font-size: 175%;
+}
+
+
+h1 {
+  margin: 1.5%;
+}
+
 .footer-padding {
 	padding-bottom: 60px;
 }
