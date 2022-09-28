@@ -450,7 +450,7 @@ app.get('/logout', function(req, res){
 });
 
 app.use((req, res, next) => {
-  const error = new Error('Not found.');
+  const error = new Error('Page not found.');
   error.status = 404;
   next(error);
 });
@@ -459,7 +459,11 @@ app.use((error, req, res, next) => {
   res.status(error.status || 500);
   
 if(error.status === 404) {
-  res.render("err404", {message: error.message});
+  res.render("error", {message: error.message});
+}
+
+if(error.status === 500) {
+  res.render("error", {message: "Internal Server Error"})
 }
 
 });
