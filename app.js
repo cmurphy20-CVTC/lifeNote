@@ -32,6 +32,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+
 mongoose.connect(process.env.DB_LINK, {useNewUrlParser: true});
 
 const NoteSchema = new mongoose.Schema ({
@@ -346,11 +347,12 @@ app.post("/register", function(req, res){
      function(err, user){
 
     if (err) {
-      console.log(err);
+      
       return res.render("register");
-    } else {
 
+    } else {
       passport.authenticate("local")(req, res, function(){
+
         res.redirect("/createNote");
 
       })
@@ -446,6 +448,26 @@ app.get('/logout', function(req, res){
     res.redirect('/');
   });
 });
+
+app.use((req, res, next) => {
+  const error = new Error('Page not found.');
+  error.status = 404;
+  next(error);
+});
+
+app.use((error, req, res, next) => {
+  res.status(error.status || 500);
+  
+if(error.status === 404) {
+  res.render("error", {message: error.message});
+}
+
+if(error.status === 500) {
+  res.render("error", {message: "Internal Server Error"})
+}
+
+});
+
 
 app.listen(3000, function() {
   console.log("Server started on port 3000");
