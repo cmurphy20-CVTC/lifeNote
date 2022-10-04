@@ -19,17 +19,24 @@ p {
 h1 {
   text-align: center;
   margin: 2%;
+  margin-top: 5%;
 }
 
 .btn {
-  background-color: #4F7942;
+  background-color: #4CB8C4;
+  color: #fff;
   margin-bottom: 5%;
+}
+
+.btn:hover {
+  background-color: #3CD3AD;
+  color: #fff;
+  text-decoration: none;
 }
 
 .container-fluid {
     padding-top: 40px;
-    padding-bottom: 20px;
-    
+    padding-bottom: 20px;   
 }
 
 /* Header */
@@ -41,8 +48,8 @@ h1 {
     border-color: #f4fefd;
     border-radius: 0;
     background-color: #4CB8C4;
-    margin-bottom: 0;
-    font-size: 12px;
+    margin-bottom: 10px;
+    font-size: 18px;
     letter-spacing: 5px;
 }
 .navbar-nav  li a:hover {
@@ -57,29 +64,26 @@ li.nav-item {
   border: 100px;
   border-color: #f4fefd;
   border-radius: 10%;
+  top: 50%;
 }
 
 ul.navbar {
-  position: absolute;
-  margin:auto;
+  left: 35%;
   padding: 25px;
-  top: 90%;
-  bottom: 15%;
-  
-  border-width: 100px;
-  border-color: #f4fefd;
 }
 
-#logo {
+a.navbar-brand {
+  position: relative;
+  left: -75%;
+}
+
+#brand-logo {
   border-radius: 50%;
-  margin: 25%;
+  margin: 15%;
   max-width: 200px;
   max-height: 200px;  
-  
 }
-.navbar-brand {
-  margin: auto;
-}
+
 
 
 /*  */
@@ -95,15 +99,11 @@ ul.navbar {
   margin-bottom: 5%;
 }
 
-.btn-success {
-  background-color: #4CB8C4;
-}
-
- .btn-success > a, .nav-item > a {
+ .btn > a, .nav-item > a {
   color: #fff;
 }
 
-.btn-success > a:hover, .nav-item > a {
+.btn > a:hover, .nav-item > a {
   color: #fff;
   text-decoration: none;
 }
@@ -139,13 +139,20 @@ a:focus {
 
 #controls {
   color: #000;
-  
 }
 
 .carousel-item{
   width: 75%;
   align-items: center;
 }
+
+.carousel-control-prev-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%234CB8C4' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E") !important;
+ }
+ 
+ .carousel-control-next-icon {
+   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%234CB8C4' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E") !important;
+ }
 
 #press {
   padding-bottom: 3%;
@@ -154,19 +161,18 @@ a:focus {
 
 .press-imgs {
   margin-left: 0%;
-  
 }
 
 .press-logo {
   width: 15%;
   margin: 15px 50px 15px;
-
 }
 
 /* Footer */
 
 .footer-padding {
 	padding-bottom: 60px;
+  margin-top: 10%;
 }
 
 .footer {
@@ -176,6 +182,7 @@ a:focus {
 	width: 100%;
 	height: 60px;
 	background-color: #4CB8C4;
+  
 }
 
 .footer p {
