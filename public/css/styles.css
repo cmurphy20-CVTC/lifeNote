@@ -52,8 +52,9 @@ h1 {
     font-size: 18px;
     letter-spacing: 5px;
 }
-.navbar-nav  li a:hover {
-    color: #fff !important;
+
+.nav-item > a:hover {
+  color:#000;
 }
 
 .nav-item > a {
@@ -67,8 +68,12 @@ li.nav-item {
   top: 50%;
 }
 
+li.nav-item:hover {
+  border-style: none;
+}
+
 ul.navbar {
-  left: 35%;
+  left: 23%;
   padding: 25px;
 }
 
@@ -84,6 +89,24 @@ a.navbar-brand {
   max-height: 200px;  
 }
 
+/* Options */
+
+.options {
+  top: 6.75%;
+  position: absolute;
+  left: 90.5%;
+  border-style: none;
+}
+
+.options > button {
+  font-size: 190%;
+  border-style:none;
+}
+
+.dropdown-item {
+  font-size: 20px;
+}
+
 
 
 /*  */
@@ -95,7 +118,7 @@ a.navbar-brand {
   text-align: center;
 }
 
-#button_reg > h2, h3 {
+#button_reg > h2 {
   margin-bottom: 5%;
 }
 
@@ -129,8 +152,6 @@ a:focus {
 }
 
 /* Testimonial Section */
-
-
 
 .testimonial-text {
   font-size: 3rem;
@@ -168,6 +189,35 @@ a:focus {
   margin: 15px 50px 15px;
 }
 
+/* Notes Section */
+
+#noteTitleInput {
+  max-width: 65%;
+}
+
+.note-container {
+  background-color: #4CB8C4;
+  border: #f4fefd;
+  border-width: 2px;
+  border-style: solid;
+  margin-bottom: 10px;
+  width: 75%;
+}
+
+.hoveredNote {
+  width: 85%;
+  background-color: #3CD3AD;
+}
+
+.note-container > h3 {
+  font-size: 35px;
+  padding: 2%;
+}
+
+.note-container > p {
+  font-size: 35px;
+  padding: 2%;
+}
 /* Footer */
 
 .footer-padding {

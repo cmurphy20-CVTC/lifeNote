@@ -2,7 +2,7 @@
 
 <h1>What Do You Want to Remember?</h1>
 
-<div class="dropdown">
+<div class="options dropdown">
   <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Options
   </button>
@@ -16,7 +16,7 @@
 <form action="/searchNotes" method="POST">
   <div class="form-group">
     <label for="searchedNote">Search Notes by Title:</label>
-    <input type="text" class="form-control" name="searchedNoteValue" autocomplete="on">
+    <input id="noteTitleInput" type="text" class="form-control" name="searchedNoteValue" autocomplete="on">
   </div>
   <button id="searchNotesBtn" type="submit" class="btn btn-dark">Search</button>
   <button class="btn btn-light"href="/userHome">Reset</button>
@@ -33,16 +33,26 @@
   </div>
 </div> -->
 
-<a href="/composeNote">Create New Note</a>
+<button class="btn btn-success btn-lg">
+  <a href="/composeNote">Create New Note</a>
+</button>
 
-  <%  notesForPage.forEach(function(note) { %>
 
-    <h4><%=note.title%></h4>
+
+<%  notesForPage.forEach(function(note) { %>
+<div class=note-container>
+
+  <h3><%=note.title%></h3>
   
-    <p><%=note.content.substring(0, 100) + " ..."%>
+  <p><%=note.content.substring(0, 200) + " ..."%>
+
     <a href="/notes/<%=note._id%>">Read More</a>
-    </p>
-  
-  <% }) %>
+
+  </p>
+
+</div>
+<% }) %>
+
+
 
 <%- include("partials/footer"); -%>
