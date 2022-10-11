@@ -8,7 +8,7 @@ body {
   font-family: Open Sans Bold;
 }
 
-h1, h2, h3, p {
+h1, h2, h3, p, em {
   color: #f4fefd;
 }
 
@@ -66,6 +66,7 @@ li.nav-item {
   border-color: #f4fefd;
   border-radius: 10%;
   top: 50%;
+ 
 }
 
 li.nav-item:hover {
@@ -73,13 +74,14 @@ li.nav-item:hover {
 }
 
 ul.navbar {
-  left: 23%;
+  right: 25%;
   padding: 25px;
+  
 }
 
 a.navbar-brand {
   position: relative;
-  left: -75%;
+  right:150%;
 }
 
 #brand-logo {
@@ -92,15 +94,11 @@ a.navbar-brand {
 /* Options */
 
 .options {
-  top: 6.75%;
-  position: absolute;
-  left: 90.5%;
-  border-style: none;
+  float: right;
 }
 
-.options > button {
-  font-size: 190%;
-  border-style:none;
+a#nabarDropdown {
+  color: #f4fefd;
 }
 
 .dropdown-item {
@@ -131,15 +129,7 @@ a.navbar-brand {
   text-decoration: none;
 }
 
-
-
-a:hover, 
-a:visited,
-a:focus {
-  /*text-decoration: none !important; 
-  color: #fff;*/
-}
-
+/* Features Section */
 
 
 .feature-box {

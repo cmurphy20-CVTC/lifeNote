@@ -1,16 +1,7 @@
-<%- include("partials/header"); -%>
+<%- include("partials/headerAuthed"); -%>
 
 <h1>What Do You Want to Remember?</h1>
 
-<div class="options dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Options
-  </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" href="/editProfile">Edit Profile</a>
-    <a class="dropdown-item" href="/logout">Log Out</a>
-  </div>
-</div>
 
 <div>
 <form action="/searchNotes" method="POST">
@@ -42,9 +33,9 @@
 <%  notesForPage.forEach(function(note) { %>
 <div class=note-container>
 
-  <h3><%=note.title%></h3>
+  <h3 id="noteTitles"><%=note.title%></h3>
   
-  <p><%=note.content.substring(0, 200) + " ..."%>
+  <p><%=note.content.substring(0, 45) + " ..."%>
 
     <a href="/notes/<%=note._id%>">Read More</a>
 
