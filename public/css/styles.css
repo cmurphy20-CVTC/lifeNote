@@ -44,8 +44,16 @@ h1 {
 }
 
 .container-fluid {
+  border-width: 4px;
+  border-style: solid;
+  border-image: linear-gradient(to right, #4CB8C4, #3CD3AD) 1;
+  background-color: #3A4F50;
     padding-top: 40px;
-    padding-bottom: 20px;   
+    padding-bottom: 20px; 
+}
+
+.border-gradient {
+
 }
 
 /* Header */
@@ -112,12 +120,10 @@ a#nabarDropdown {
   font-size: 20px;
 }
 
-
-
 /*  */
 
 #button_reg {
-  margin-top: 5%;
+  background-color: #3A4F50;
   text-align: center;
 }
 
@@ -132,6 +138,13 @@ a#nabarDropdown {
 .btn > a:hover, .nav-item > a {
   color: #fff;
   text-decoration: none;
+}
+
+/* Home Sections */
+
+.home-section {
+  margin-top: 2.5%;
+  margin-bottom: 2.5%;
 }
 
 /* Features Section */
