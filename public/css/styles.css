@@ -12,8 +12,16 @@ h1, h2, h3, p, em {
   color: #f4fefd;
 }
 
+.home-title {
+  font-weight: bold;
+}
+
+.home-callToAction {
+  font-weight: bold;
+}
+
 p {
-  font-size: 25px;
+  font-size: 35px;
 }
 
 h1 {
@@ -25,6 +33,7 @@ h1 {
 .btn {
   background-color: #4CB8C4;
   color: #fff;
+  font-weight: bold;
   margin-bottom: 5%;
 }
 
@@ -66,7 +75,6 @@ li.nav-item {
   border-color: #f4fefd;
   border-radius: 10%;
   top: 50%;
- 
 }
 
 li.nav-item:hover {
@@ -75,8 +83,7 @@ li.nav-item:hover {
 
 ul.navbar {
   right: 25%;
-  padding: 25px;
-  
+  padding: 25px; 
 }
 
 a.navbar-brand {
@@ -109,8 +116,6 @@ a#nabarDropdown {
 
 /*  */
 
-
-
 #button_reg {
   margin-top: 5%;
   text-align: center;
@@ -131,9 +136,12 @@ a#nabarDropdown {
 
 /* Features Section */
 
-
 .feature-box {
   text-align: center;
+}
+
+h3.feature-title {
+  font-weight: bold;
 }
 
 .icon {
@@ -179,6 +187,48 @@ a#nabarDropdown {
   margin: 15px 50px 15px;
 }
 
+/* Forms */
+.form-title {
+  color: #3A4F50;
+  font-weight: bold;
+  padding-bottom: 5%;
+}
+
+.form-control {
+  max-width: 90%;
+  margin-right: 2.5%;
+}
+
+.form-label {
+  font-weight: bold;
+}
+
+#googleBtn {
+  margin-top: 5%;
+  margin-left: 10%;
+}
+
+/* Feature Section */
+
+#feature-content {
+  background-color: #3A4F50;
+  border: #f4fefd;
+  border-width: 5px;
+  border-style: solid;
+  margin: 5%;
+  max-width: 95%;
+  width: 100%;
+}
+
+.feature-paragraph {
+  margin: 5%;
+}
+
+.feature-title {
+  font-weight: bold;
+}
+
+
 /* Notes Section */
 
 #noteTitleInput {
@@ -221,8 +271,7 @@ a#nabarDropdown {
 	bottom: 0;
 	width: 100%;
 	height: 60px;
-	background-color: #4CB8C4;
-  
+	background-color: #4CB8C4;  
 }
 
 .footer p {

@@ -1,7 +1,6 @@
 <%- include("partials/header"); -%>
     
 <div class="container mt-5">
-  <h1>Register</h1>
 
   <div class="row">
     <div class="col-sm-8">
@@ -10,24 +9,25 @@
 
           <!-- Makes POST request to /register route -->
           <form action="/register" method="POST">
+            <h1 class="form-title">Create An Account</h1>
             <div class="form-group">
-              <label for="firstName">First Name</label>
+              <label class="form-label" for="firstName">First Name:</label>
               <input type="text" class="form-control" name="firstName">
             </div>
             <div class="form-group">
-              <label for="lastName">Last Name</label>
+              <label class="form-label" for="lastName">Last Name:</label>
               <input type="text" class="form-control" name="lastName">
             </div>
             <div class="form-group">
-              <label for="email">Email</label>
+              <label class="form-label" for="email">Email:</label>
               <input type="email" class="form-control" name="username">
             </div>
             <div class="form-group">
-              <label for="email">Confirm Email</label>
+              <label class="form-label" for="email">Confirm Email:</label>
               <input type="email" class="form-control" name="email">
             </div>
             <div class="form-group">
-              <label for="password">Password</label>
+              <label class="form-label" for="password">Password:</label>
               <input type="password" class="form-control" name="password">
             </div>
             <button type="submit" class="btn btn-dark">Register</button>
@@ -39,11 +39,12 @@
 
     <div class="col-sm-4">
       <div class="card body">
+        <h1 class="form-title">Register With:</h1>
         <div class="card-body">
           <img id="logo" src="/images/icons8-google-60.png" alt="Google Logo">
-          <a class="btn btn-lg" href="/auth/google" role="button">
+          <a id="googleBtn" class="btn btn-lg" href="/auth/google" role="button">
             
-            Sign Up with Google
+            Google
           </a>
         </div>
       </div>
