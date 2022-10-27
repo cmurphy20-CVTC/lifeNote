@@ -60,8 +60,7 @@ const userSchema = new mongoose.Schema ({
   password: String,
   provider: String, // values: 'local', 'google', 'facebook'
   email: String,
-  notes: [{type: mongoose.Schema.Types.ObjectId, ref: 'Note'}],
-  profileColor: {type: String, default: "default"},  
+  notes: [{type: mongoose.Schema.Types.ObjectId, ref: 'Note'}], 
   createdAt: {
     type: Date, 
     default: () => Date.now()
@@ -101,7 +100,16 @@ function(accessToken, refreshToken, profile, cb) {
   User.findOrCreate({ username: profile.id },
     {
       provider: "google",
-      email: profile._json.email
+      email: profile._json.email,
+      notes: [{type: mongoose.Schema.Types.ObjectId, ref: 'Note'}], 
+      createdAt: {
+        type: Date, 
+        default: () => Date.now()
+      },
+      updatedAt: {
+        type: Date, 
+        default: () => Date.now()
+      }      
     }, function (err, user) {
     return cb(err, user);
   });
@@ -165,7 +173,7 @@ app.get("/user/note", function(req, res){
 }
 })
 
-app.get("/user/userHome", function(req, res){
+app.get("/userHome", function(req, res){
 
   if(!req.isAuthenticated() || !req.user.id) {
 
@@ -202,11 +210,11 @@ app.get("/contact", function(req, res){
   res.render("contact", {contactContent: contactContent});
 });
 
-app.get("/user/editProfile", function(req, res){
+app.get("/editProfile", function(req, res){
   res.render("editProfile");
 });
 
-app.get("/user/composeNote", function(req, res){
+app.get("/composeNote", function(req, res){
    if(req.isAuthenticated()) {
     res.render("composeNote");
    } else {

@@ -205,7 +205,8 @@ h3.feature-title {
 
 /* Forms */
 .form-title {
-  color: #3A4F50;
+  background-color: #3A4F50;
+  color: #f4fefd;
   font-weight: bold;
   padding-bottom: 5%;
 }
@@ -216,7 +217,12 @@ h3.feature-title {
 }
 
 .form-label {
+  color: #f4fefd;
   font-weight: bold;
+}
+
+.card-body {
+  background-color: #3A4F50;
 }
 
 #googleBtn {
