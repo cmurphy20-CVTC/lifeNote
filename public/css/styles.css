@@ -27,7 +27,7 @@ p {
 h1 {
   text-align: center;
   margin: 2%;
-  margin-top: 5%;
+  margin-top: 2.5%;
 }
 
 .btn {
@@ -44,16 +44,16 @@ h1 {
 }
 
 .container-fluid {
-  border-width: 4px;
-  border-style: solid;
-  border-image: linear-gradient(to right, #4CB8C4, #3CD3AD) 1;
+  
   background-color: #3A4F50;
     padding-top: 40px;
     padding-bottom: 20px; 
 }
 
 .border-gradient {
-
+  border-width: 4px;
+  border-style: solid;
+  border-image: linear-gradient(to right, #4CB8C4, #3CD3AD) 1;
 }
 
 /* Header */
@@ -71,7 +71,7 @@ h1 {
 }
 
 .nav-item > a:hover {
-  color:#000;
+  color:#3A4F50;
 }
 
 .nav-item > a {
@@ -96,14 +96,17 @@ ul.navbar {
 
 a.navbar-brand {
   position: relative;
-  right:150%;
+  right: 45%;
 }
 
 #brand-logo {
   border-radius: 50%;
+ 
   margin: 15%;
   max-width: 200px;
   max-height: 200px;  
+  position: static;
+  
 }
 
 /* Options */
@@ -225,9 +228,6 @@ h3.feature-title {
 
 #feature-content {
   background-color: #3A4F50;
-  border: #f4fefd;
-  border-width: 5px;
-  border-style: solid;
   margin: 5%;
   max-width: 95%;
   width: 100%;
