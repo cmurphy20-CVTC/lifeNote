@@ -31,11 +31,11 @@
 
 
 <%  notesForPage.forEach(function(note) { %>
-<div class=note-container>
+<div class="note-container border-gradient">
 
   <h3 id="noteTitles"><%=note.title%></h3>
   
-  <p><%=note.content.substring(0, 45) + " ..."%>
+  <p id="noteContent"><%=note.content.substring(0, 45) + " ..."%>
 
     <a href="/notes/<%=note._id%>">Read More</a>
 

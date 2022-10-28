@@ -325,7 +325,7 @@ app.post("/delete", function(req, res){
   })
 });
 
-app.get("/user/notes/:noteId", function(req, res){
+app.get("/notes/:noteId", function(req, res){
   const requestedNoteId = req.params.noteId;
 
    Note.findOne({_id: requestedNoteId}, function(err, singleNote){

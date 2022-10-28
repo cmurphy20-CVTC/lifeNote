@@ -34,6 +34,7 @@ h1 {
   background-color: #4CB8C4;
   color: #fff;
   font-weight: bold;
+  font-size: 125%;
   margin-bottom: 5%;
 }
 
@@ -53,10 +54,19 @@ h1 {
 .border-gradient {
   border-width: 4px;
   border-style: solid;
-  border-image: linear-gradient(to right, #4CB8C4, #3CD3AD) 1;
+  border-image: linear-gradient(to right, #3CD3AD, #f4fefd ) 1;
 }
 
 /* Header */
+
+.navDiv {
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.navbar li {
+  display: inline;
+}
 
 .navbar {
     padding-top: 15px;
@@ -70,57 +80,22 @@ h1 {
     letter-spacing: 5px;
 }
 
-.nav-item > a:hover {
-  color:#3A4F50;
-}
-
 .nav-item > a {
   font-size: 175%;
 }
 
-li.nav-item {
-  border: 100px;
-  border-color: #f4fefd;
-  border-radius: 10%;
-  top: 50%;
-}
-
-li.nav-item:hover {
-  border-style: none;
-}
-
-ul.navbar {
-  right: 25%;
-  padding: 25px; 
-}
 
 a.navbar-brand {
   position: relative;
-  right: 45%;
+  right: 25%;
 }
 
 #brand-logo {
   border-radius: 50%;
- 
-  margin: 15%;
+  margin: 2.5%;
   max-width: 200px;
   max-height: 200px;  
   position: static;
-  
-}
-
-/* Options */
-
-.options {
-  float: right;
-}
-
-a#nabarDropdown {
-  color: #f4fefd;
-}
-
-.dropdown-item {
-  font-size: 20px;
 }
 
 /*  */
@@ -219,6 +194,7 @@ h3.feature-title {
 .form-label {
   color: #f4fefd;
   font-weight: bold;
+  font-size: 150%;
 }
 
 .card-body {
@@ -256,9 +232,6 @@ h3.feature-title {
 
 .note-container {
   background-color: #4CB8C4;
-  border: #f4fefd;
-  border-width: 2px;
-  border-style: solid;
   margin-bottom: 10px;
   width: 75%;
 }
@@ -276,6 +249,16 @@ h3.feature-title {
 .note-container > p {
   font-size: 35px;
   padding: 2%;
+}
+
+#noteContent > a {
+  color: #f4fefd;
+  text-decoration: none;
+
+}
+
+.notesBtn {
+  display: inline;
 }
 /* Footer */
 
