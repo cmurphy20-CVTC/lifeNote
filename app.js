@@ -3,7 +3,8 @@ require('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
-
+const exphbs = require('express-handlebars');
+const nodemailer = require('nodemailer');
 const mongoose = require("mongoose");
 const _ = require("lodash");
 const session = require('express-session');
@@ -31,7 +32,6 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-
 mongoose.connect(process.env.DB_LINK, {useNewUrlParser: true});
 
 const NoteSchema = new mongoose.Schema ({
@@ -56,7 +56,7 @@ const userSchema = new mongoose.Schema ({
 
   username: { type: String, unique: true },
   firstName: String,
-  lastName: String, // values: email address, googleId, facebookId
+  lastName: String, // values: email address, googleId
   password: String,
   provider: String, // values: 'local', 'google', 'facebook'
   email: String,
@@ -230,6 +230,30 @@ app.get("/register", function(req, res){
   res.render("register");
 });
 
+app.get("/notes/:noteId", function(req, res){
+  const requestedNoteId = req.params.noteId;
+
+   Note.findOne({_id: requestedNoteId}, function(err, singleNote){
+    if(err) {
+      console.log(err)
+    } else {
+      res.render("note", {
+        id: requestedNoteId,
+        title: singleNote.title,
+        content: singleNote.content
+      })
+    }
+   }
+   )
+  });  
+
+  app.get('/logout', function(req, res){
+    req.logout(function(err) {
+      if (err) { return next(err); }
+      res.redirect('/');
+    });
+  });
+
 app.post("/searchNotes", function(req, res){
 
   const yourUserId = req.user.id;
@@ -324,23 +348,6 @@ app.post("/delete", function(req, res){
     }
   })
 });
-
-app.get("/notes/:noteId", function(req, res){
-  const requestedNoteId = req.params.noteId;
-
-   Note.findOne({_id: requestedNoteId}, function(err, singleNote){
-    if(err) {
-      console.log(err)
-    } else {
-      res.render("note", {
-        id: requestedNoteId,
-        title: singleNote.title,
-        content: singleNote.content
-      })
-    }
-   }
-   )
-  });  
 
 app.post("/register", function(req, res){
 
@@ -445,14 +452,50 @@ app.post("/createNote", function(req, res){
       });      
     }
   })
-})
-
-app.get('/logout', function(req, res){
-  req.logout(function(err) {
-    if (err) { return next(err); }
-    res.redirect('/');
-  });
 });
+
+app.post("/sendEmail", function(req, res) {
+  const output = `
+  <p>You have a new contact request</p>
+  <h3>Contact Details</h3>
+  <ul>
+    <li>Name: ${req.body.name}</li>
+    <li>Email: ${req.body.email}</li>
+    <li>Phone: ${req.body.phone}</li>
+  </ul>
+  <h3>Message</h3>
+  <p>${req.body.message}</p>
+  `;
+
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL, // generated ethereal user
+      pass: process.env.EMAIL_PASS, // generated ethereal password
+    },
+    tls: {
+      rejectUnauthorized: false
+    }
+  });
+
+  // send mail with defined transport object
+  let info = transporter.sendMail({
+    from: '"Nodemailer Contact" <process.env.EMAIL>', // sender address
+    to: "cmurphymwdf@gmail.com", // list of receivers
+    subject: "Node Contact Request", // Subject line
+    text: "Hello world?", // plain text body
+    html: output, // html body
+  });
+
+  console.log("Message sent: %s", info.messageId);
+ 
+  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+
+  res.render("contact", {msg: "Email has been sent"});
+ 
+});
+
 
 app.use((req, res, next) => {
   const error = new Error('Page not found....head back to the home page.');

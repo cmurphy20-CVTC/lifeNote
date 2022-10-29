@@ -1,45 +1,10 @@
 <%- include("partials/headerAuthed"); -%>
 
-<h3>Edit Profile</h3>
-
-<div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Options
-  </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" href="/logout">Log Out</a>
-  </div>
-</div>
 
 <div class="row">
   <div class="col-sm-8">
     <div class="card">
       <div class="card-body">
-
-        <h3>Change Your Profile Color</h3>
-        <!-- Makes POST request to /editProfile route -->
-        <form action="/editProfileColor" method="POST">
-          <div class="form-group profileColors">
-            <label for="text">Default:</label>
-            <input id="default" type="radio" class="form-control" name="defaultColor" value="Default">
-          </div>
-          <div class="form-group profileColors">
-            <label for="text">Blue:</label>
-            <input id="forBlue" type="radio" class="form-control" name="blue" value="Blue">
-          </div>
-          <div class="form-group profileColors">
-            <label for="text">Red:</label>
-            <input id="forRed" type="radio" class="form-control" name="red" value="Red">
-          </div>
-          <div class="form-group profileColors">
-            <label for="text">Purple:</label>
-            <input id="forPurple" type="radio" class="form-control" name="purple" value="Purple">
-          </div>
-         
-          <button id="changeColorBtn" type="submit" class="btn btn-dark">Set Color</button>
-        </form>
-
-        <button id="previewBtn" type="submit" class="btn btn-light">Preview Color</button>
 
         <h3>Change Your Password</h3>
 

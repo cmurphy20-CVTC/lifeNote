@@ -251,6 +251,12 @@ h3.feature-title {
   padding: 2%;
 }
 
+.singleNote-container {
+  background-color: #4CB8C4;
+  margin-bottom: 10px;
+  width: 75%;
+}
+
 #noteContent > a {
   color: #f4fefd;
   text-decoration: none;
