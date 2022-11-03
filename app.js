@@ -3,7 +3,7 @@ require('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
-const exphbs = require('express-handlebars');
+
 const nodemailer = require('nodemailer');
 const mongoose = require("mongoose");
 const _ = require("lodash");
@@ -92,25 +92,26 @@ passport.use(new GoogleStrategy({
   callbackURL: "http://localhost:3000/auth/google/Note",
   userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
 },
-function(accessToken, refreshToken, profile, cb) {
-  
-  User.findOrCreate({ username: profile.id },
-    {
-      provider: "google",
-      email: profile._json.email,
-      notes: [{type: mongoose.Schema.Types.ObjectId, ref: 'Note'}], 
-      createdAt: {
-        type: Date, 
-        default: () => Date.now()
-      },
-      updatedAt: {
-        type: Date, 
-        default: () => Date.now()
-      }      
-    }, function (err, user) {
-    return cb(err, user);
-  });
-}
+
+  function(accessToken, refreshToken, profile, cb) {
+    
+    User.findOrCreate({ username: profile.id },
+      {
+        provider: "google",
+        email: profile._json.email,
+        notes: [{type: mongoose.Schema.Types.ObjectId, ref: 'Note'}], 
+        createdAt: {
+          type: Date, 
+          default: () => Date.now()
+        },
+        updatedAt: {
+          type: Date, 
+          default: () => Date.now()
+        }      
+      }, function (err, user) {
+      return cb(err, user);
+    });
+  }
 ));
 
 app.get("/auth/google", passport.authenticate('google', {
@@ -157,17 +158,18 @@ app.get("/user/note", function(req, res){
 
   } else {
 
-  Note.find({userId: req.user.id}, function(err, userNotes){
-    if (err){
-      console.log(err);
-      res.redirect("/")
-    } else {
+    Note.find({userId: req.user.id}, function(err, userNotes){
+      if (err){
+        console.log(err);
+        res.redirect("/")
+      } else {
 
-      if (userNotes) {
-        res.render("note", {notesForPage: userNotes});
-    }
-  }})
-}
+        if (userNotes) {
+          res.render("note", {notesForPage: userNotes});
+        } 
+      }
+    })
+  }
 })
 
 app.get("/userHome", function(req, res){
@@ -177,23 +179,22 @@ app.get("/userHome", function(req, res){
     res.redirect("/")
 
   } else {
+    
+    Note.find({userId: req.user.id}, function(err, userNotes){
 
-    User.findOne({userColor: req.user.profileColor}, function(err, userColor){
-      Note.find({userId: req.user.id}, function(err, userNotes){
-        if (err){
+      if (err){
           console.log(err);
           res.redirect("/")
-        } else {
-          if (userNotes) {
-           
-            res.render("userHome", {notesForPage: userNotes, chosenColor: userColor});
-          }
+      } else {
+
+        if (userNotes) {
+          
+          res.render("userHome", {notesForPage: userNotes});
         }
-      })
+      }
     })
-
-
-}});
+  }
+});
 
 app.get("/features", function(req, res){
   res.render("features");
@@ -230,7 +231,7 @@ app.get("/register", function(req, res){
 app.get("/notes/:noteId", function(req, res){
   const requestedNoteId = req.params.noteId;
 
-   Note.findOne({_id: requestedNoteId}, function(err, singleNote){
+  Note.findOne({_id: requestedNoteId}, function(err, singleNote){
     if(err) {
       console.log(err)
     } else {
@@ -240,38 +241,36 @@ app.get("/notes/:noteId", function(req, res){
         content: singleNote.content
       })
     }
-   }
-   )
-  });  
+  })
+});  
 
-  app.get('/logout', function(req, res){
-    req.logout(function(err) {
-      if (err) { return next(err); }
-      res.redirect('/');
-    });
+app.get('/logout', function(req, res){
+  req.logout(function(err) {
+    if (err) { return next(err); }
+    res.redirect('/');
   });
+});
 
 app.post("/searchNotes", function(req, res){
 
   const yourUserId = req.user.id;
   const yoursearchedTitle = req.body.searchedNoteValue;
   
-
   Note.find({userId: yourUserId, title: {$regex: yoursearchedTitle, $options:'i'}}, function(err, searchedNotes){
-          if(err) {
-            console.log(err)
-          } else {
+    if(err) {
+      console.log(err)
+    } else {
 
-            if(searchedNotes.title === "") {
-              searchedNotes = {title: "No match", content: "Try searching again."}
+      if(yoursearchedTitle != searchedNotes.title) {
+        noNotes = {title: "No match", content: "Try searching again."}
+        console.log("nothing");
+        res.render("userHome", {notesForPage: noNotes})
 
-              res.render("userHome", {notesForPage: searchedNotes})
-            } else {
-            
-              res.render("userHome", {notesForPage: searchedNotes})
-            }      
-          } 
-        })
+      } else {
+        res.render("userHome", {notesForPage: searchedNotes})
+      }      
+    } 
+  })
 });
 
 app.post("/compose", function(req, res){
@@ -287,20 +286,20 @@ app.post("/compose", function(req, res){
   });
 
   User.findOne({_id: yourUserId}, function(err, foundUser){
-          if(err) {
-            console.log(err)
-          } else {
-            
-            foundUser.notes.push(newNote.id);
+    if(err) {
+      console.log(err)
+    } else {
+      
+      foundUser.notes.push(newNote.id);
 
-            foundUser.save();
-            newNote.save(function(err){
-              if (!err){
-                  res.redirect("/userHome");
-              }
-            });        
-          } 
-        })
+      foundUser.save();
+      newNote.save(function(err){
+        if (!err){
+            res.redirect("/userHome");
+        }
+      });        
+    } 
+  })
 });
 
 app.post("/selectEdit", function(req, res){
@@ -360,6 +359,7 @@ app.post("/register", function(req, res){
       return res.render("register");
 
     } else {
+
       passport.authenticate("local")(req, res, function(){
 
         res.redirect("/createNote");
@@ -372,11 +372,8 @@ app.post("/register", function(req, res){
 app.post("/login", function(req, res){
 
   const user = new User({
-
     username: req.body.username,
-
     password: req.body.password,
-
   });
 
   req.login(user, function(err){
@@ -411,14 +408,11 @@ app.post("/editProfile", function(req, res){
         userFound.changePassword(oldPassword, newPassword, function(err){
           userFound.save(function(){
             res.redirect('/Note')
-        })
-       
+          })
         })
       }
     }
   })
-
-
 });
 
 app.post("/createNote", function(req, res){
