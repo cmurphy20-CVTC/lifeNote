@@ -260,17 +260,10 @@ app.post("/searchNotes", function(req, res){
     if(err) {
       console.log(err)
     } else {
-
-      if(yoursearchedTitle != searchedNotes.title) {
-        noNotes = {title: "No match", content: "Try searching again."}
-        console.log("nothing");
-        res.render("userHome", {notesForPage: noNotes})
-
-      } else {
         res.render("userHome", {notesForPage: searchedNotes})
       }      
     } 
-  })
+  )
 });
 
 app.post("/compose", function(req, res){
