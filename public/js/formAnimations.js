@@ -21,7 +21,7 @@ $(document).ready(function() {
     right: 1000,
     opacity: 0
   }).animate({
-    right: -10,
+    right: -125,
     opacity: 1
   }, 750);
 

@@ -3,14 +3,12 @@ require('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
-
 const nodemailer = require('nodemailer');
 const mongoose = require("mongoose");
 const _ = require("lodash");
 const session = require('express-session');
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require('mongoose-findorcreate');
 
 const app = express();
@@ -55,7 +53,6 @@ const userSchema = new mongoose.Schema ({
   firstName: String,
   lastName: String, // values: email address, googleId
   password: String,
-  provider: String, // values: 'local', 'google', 'facebook'
   email: String,
   notes: [{type: mongoose.Schema.Types.ObjectId, ref: 'Note'}], 
   createdAt: {
@@ -85,47 +82,7 @@ passport.deserializeUser(function(id, done) {
   });
 });
 
-// Google Strategy
-passport.use(new GoogleStrategy({
-  clientID: process.env.CLIENT_ID,
-  clientSecret: process.env.CLIENT_SECRET,
-  callbackURL: "http://localhost:3000/auth/google/Note",
-  userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
-},
 
-  function(accessToken, refreshToken, profile, cb) {
-    
-    User.findOrCreate({ username: profile.id },
-      {
-        provider: "google",
-        email: profile._json.email,
-        notes: [{type: mongoose.Schema.Types.ObjectId, ref: 'Note'}], 
-        createdAt: {
-          type: Date, 
-          default: () => Date.now()
-        },
-        updatedAt: {
-          type: Date, 
-          default: () => Date.now()
-        }      
-      }, function (err, user) {
-      return cb(err, user);
-    });
-  }
-));
-
-app.get("/auth/google", passport.authenticate('google', {
-  
-  scope: ["profile", "email"]
-
-}));
-
-app.get('/auth/google/Note', 
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  function(req, res) {
-    // Successful authentication, redirect home.
-    res.redirect('/Note');
-  });
 
 app.get("/", function(req, res){
   
@@ -355,7 +312,7 @@ app.post("/register", function(req, res){
 
       passport.authenticate("local")(req, res, function(){
 
-        res.redirect("/createNote");
+        res.redirect("/userHome");
 
       })
     }
@@ -400,7 +357,7 @@ app.post("/editProfile", function(req, res){
       if(userFound) {
         userFound.changePassword(oldPassword, newPassword, function(err){
           userFound.save(function(){
-            res.redirect('/Note')
+            res.redirect('/userHome')
           })
         })
       }
@@ -458,9 +415,6 @@ app.post("/sendEmail", function(req, res) {
       user: process.env.EMAIL, // generated ethereal user
       pass: process.env.EMAIL_PASS, // generated ethereal password
     },
-    tls: {
-      rejectUnauthorized: false
-    }
   });
 
   // send mail with defined transport object
@@ -468,7 +422,6 @@ app.post("/sendEmail", function(req, res) {
     from: '"Nodemailer Contact" <process.env.EMAIL>', // sender address
     to: "cmurphy20@student.cvtc.edu", // list of receivers
     subject: "Node Contact Request", // Subject line
-    text: "Hello world?", // plain text body
     html: output, // html body
   });
 
@@ -494,7 +447,7 @@ if(error.status === 404) {
   res.render("error", {message: error.message});
 }
 
-if(error.status === 400) {
+if(error.status === 400 || error.status === 401 || error.status === 408) {
   res.render("error", {message: "Well this is awkward....please head back."})
 }
 
