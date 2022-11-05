@@ -457,7 +457,7 @@ if(error.status === 500) {
 
 });
 
-app.listen(0.0.0.0:$PORT, function() {
+app.listen(`0.0.0.0:$PORT`, function() {
   console.log("Server has started successfully ");
 });
 
