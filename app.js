@@ -460,7 +460,7 @@ if(error.status === 500) {
 
 let port = process.env.PORT;
 if (port == null || port == "") {
-  port = 3000;
+  port = `0.0.0.0:$PORT`;
 }
 
 app.listen(port, function() {
