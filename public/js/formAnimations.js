@@ -20,8 +20,8 @@ $(document).ready(function() {
   $regLogForm.css({
     right: 1000,
     opacity: 0
-  }).animate({
-    right: -125,
+  }).attr("justify-content", "center").animate({
+    right: -10,
     opacity: 1
   }, 750);
 

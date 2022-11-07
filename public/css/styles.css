@@ -1,5 +1,6 @@
 html {
   min-height: 100%;
+  min-width: 100%;
   position: relative;
 }
 
@@ -179,6 +180,13 @@ h3.feature-title {
 }
 
 /* Forms */
+
+#forms {
+  max-width: 99vw;
+  min-width: 90vw;
+}
+
+
 .form-title {
   background-color: #3A4F50;
   color: #f4fefd;
@@ -194,7 +202,7 @@ h3.feature-title {
 .form-label {
   color: #f4fefd;
   font-weight: bold;
-  font-size: 150%;
+  font-size: 200%;
 }
 
 .card-body {
@@ -275,9 +283,9 @@ h3.feature-title {
 /* Footer */
 
 .footer {
-	
+ 
 	text-align: center;
-	margin-top: 5%;
+	margin-top: 7%;
 	width: 100%;
 	height: .5%;
 	background-color: #4CB8C4;  

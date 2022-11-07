@@ -100,12 +100,14 @@ app.get("/register", function(req, res){
 });
 
 // step one in creating account
-app.get("/user/createNote", function(req, res){
-  if(req.isAuthenticated()) {
-    res.render("createNote");
-   } else {
-    res.redirect("/")
-   }
+app.get("/createNote", function(req, res){
+  // if(req.isAuthenticated()) {
+  //   res.render("createNote");
+  //  } else {
+  //   res.redirect("/")
+  //  }
+
+   res.render("createNote");
 });
 
 app.get("/user/note", function(req, res){
@@ -313,7 +315,7 @@ app.post("/register", function(req, res){
 
       passport.authenticate("local")(req, res, function(){
 
-        res.redirect("/userHome");
+        res.redirect("/createNote");
 
       })
     }
