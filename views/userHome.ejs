@@ -1,40 +1,39 @@
-<%- include("partials/header"); -%>
+<%- include("partials/headerAuthed"); -%>
 
 <h1>What Do You Want to Remember?</h1>
 
+
 <div>
-
-  <li><a href="/editProfile">Edit Your Profile</a></li>
-  <a class="btn btn-light btn-lg" href="/logout" role="button">Log Out</a>
-
-</div>
-
-<form action="/chooseTopic" method="POST">
-  
-
-<%  topicsForPage.forEach(function(topic) { %>
-
+<form action="/searchNotes" method="POST">
   <div class="form-group">
-
-    <label for="text"><%=topic.title%></label>
-    <input type="radio" class="form-control" name="chosenTopic" value="<%=topic.id%>" id="<%topic.id%>">
- 
+    <label for="searchedNote">Search Notes by Title:</label>
+    <input id="noteTitleInput" type="text" class="form-control" name="searchedNoteValue" autocomplete="on">
+  </div>
+  <button id="searchNotesBtn" type="submit" class="btn btn-dark">Search</button>
+  <button class="btn btn-light"href="/userHome">Reset</button>
+</form>
 </div>
 
-    <% }) %>
+<button class="btn btn-success btn-lg">
+  <a href="/composeNote">Create New Note</a>
+</button>
 
-    <button type="submit" value="chosenTopicBtn" class="btn btn-dark">Confirm</button>
+<%  notesForPage.forEach(function(note) { %>
 
-</form>
-
-    <form action="/createAdditionalTopic" method="POST">
-      <div class="form-group">
-        <label for="additionalTopic">Topic</label>
-        <input type="text" class="form-control" name="additionalTopic" placeholder="Recipes">
-      </div>
   
-      <button type="submit" class="btn btn-dark">Confirm</button>
-    </form>
+<div class="note-container border-gradient">
+
+  <h3 id="noteTitles"><%=note.title%></h3>
+  
+  <p id="noteContent"><%=note.content.substring(0, 45) + " ..."%>
+
+    <a href="/notes/<%=note._id%>">Read More</a>
+
+  </p>
+
+</div>
+<% }) %>
+
 
 
 <%- include("partials/footer"); -%>

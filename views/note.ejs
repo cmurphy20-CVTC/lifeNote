@@ -1,0 +1,34 @@
+<%- include("partials/headerAuthed"); -%>
+
+<h1>What Do You Want to Remember?</h1>
+
+
+<div class="singleNote-container border-gradient">
+  <h2><%= title%></h2>
+  <p><%= content%></p>
+</div>
+
+<div class="notesBtn">
+
+  <form action="/selectEdit" method="post">
+    <button id="editBtn" class="btn btn btn-lg" name="selectedEdit" value="<%= id %>" type="submit">
+      Edit
+    </button>
+  </form>
+    
+</div>
+
+<div class="notesBtn">
+  <form action="/delete" method="post">
+    <button id="deleteBtn" class="btn btn-danger btn-lg" name="selectedNote" value="<%= id %>" type="submit">
+      Delete
+    </button>
+  </form>
+  
+</div>
+
+
+  <div><a class="btn btn-light btn-lg" href="/userHome" role="button">Back</a></div>
+
+
+<%- include("partials/footer"); -%>

@@ -1,17 +1,113 @@
 
 <%- include("partials/header"); -%>
-    <h1>Home</h1>
-    <p> <%= startingContent %> </p>
 
+ <div class="border-gradient">
     
+  <div class="container-fluid">
+    <!-- Features -->
+
+    <h1 class="home-title">Keep life a little more organized.</h1>
+
+  <section class="home-section" id="features">
+
+      <div class="row">
+        <div class="feature-box col-lg-4">
+          <i class="icon fas fa-check-circle fa-4x"></i>
+          <h3 class="feature-title">Easy to use.</h3>
+          <p>Forget things easily? Not anymore!</p>
+        </div>
+
+        <div class="feature-box col-lg-4">
+          <i class="icon fas fa-pen fa-4x"></i>
+          <h3 class="feature-title">Impress Others</h3>
+          <p>Keep track of what's happening in your friends lives.</p>
+        </div>
+
+        <div class="feature-box col-lg-4">
+          <i class="icon fas fa-heart fa-4x"></i>
+          <h3 class="feature-title">Guaranteed to work.</h3>
+          <p>Organize your life or your money back!</p>
+        </div>
+
+      </div> <!--end row-->
+   
+  </section>
+
+     <!-- Testimonials -->
+
+  <section class="home-section" id="testimonials">
+
+    <div id="testimonial-carousel" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-target="#testimonial-carousel" data-to-slide="0" class="active"></li>
+            <li data-target="#testimonial-carousel" data-to-slide="1"></li>
+            <li data-target="#testimonial-carousel" data-to-slide="2"></li>
+        </ol>
+
+      <div class="carousel-inner">
+        <div class="carousel-item active container-fluid">
+          <h2 class="testimonial-text">I can finally keep track of my life!</h2>
+          
+          <em>Derrick, New York</em>
+        </div> <!-- end Derrick div-->
+
+        <div class="carousel-item container-fluid">
+          <h2 class="testimonial-text">Its so much fun to learn new things.</h2>
+          
+          <em>Beverly, Illinois</em>
+        </div> <!-- end Beverly div-->
+      
+        <div class="carousel-item container-fluid">
+          <h2 class="testimonial-text">The possibilities are endless!</h2>
+        
+          <em>Evan, Wisconsin</em>
+        </div> <!-- end Evan div-->
+
+        <div class="carousel-item container-fluid">
+          <h2 class="testimonial-text">I have too many hobbies to keep track of!</h2>
+        
+          <em>Matt, Minnesota</em>
+        </div> <!-- end Matt div-->
+
+    </div> <!--end carousel inner-->
+
+      <a class="carousel-control-prev" href="#testimonial-carousel" role="button" data-slide="prev">
+        <span id="controls" class="carousel-control-prev-icon" ></span>
+      </a>
+
+      <a  class="carousel-control-next" href="#testimonial-carousel" role="button" data-slide="next">
+        <span  class="carousel-control-next-icon" ></span>
+      </a>
+
+    </div> <!---end testimonial-carousel -->
+
+    <div class=" press-imgs">
+      <img class="press-logo" src="images/TechCrunch.png" alt="tc-logo">
+      <img class="press-logo" src="images/tnw.png" alt="tnw-logo">
+      <img class="press-logo" src="images/bizinsider.png" alt="biz-insider-logo">
+      <img class="press-logo" src="images/mashable.png" alt="mashable-logo">
+    </div> <!-- end press-imgs-->
+
+   </div>
+
+  </section>
+
+  <section>
 
     <div id="button_reg">
-        <h3>Please Register An Account or Login</h3>
+
+      <h2 class="home-callToAction">Start Organizing Your Life Today!</h2>
+      
+        <h3>Register An Account or Login</h3>
 
         <button class="btn btn-success btn-lg"><a class="text-decoration-none" href="/register">Register</a></button>
         <button class="btn btn-success btn-lg"><a href="/login">Login</a></button>
-    </div>
+    </div> <!-- end button_reg -->
+
+  </section>
     
-        
+</div>     
+
+</div>
 
 <%- include("partials/footer"); -%>
