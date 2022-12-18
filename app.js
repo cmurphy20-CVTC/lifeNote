@@ -101,11 +101,11 @@ app.get("/register", function(req, res){
 
 // step one in creating account
 app.get("/createNote", function(req, res){
-  // if(req.isAuthenticated()) {
-  //   res.render("createNote");
-  //  } else {
-  //   res.redirect("/")
-  //  }
+  if(req.isAuthenticated()) {
+    res.render("createNote");
+   } else {
+    res.redirect("/")
+   }
 
    res.render("createNote");
 });
@@ -301,10 +301,10 @@ app.post("/delete", function(req, res){
 app.post("/register", function(req, res){
 
   User.register(new User({
-    username: req.body.username, 
-    firstName: req.body.firstName, 
-    lastName: req.body.lastName, 
-    email: req.body.email}), req.body.password,
+    username: req.body.username.trim(), 
+    firstName: req.body.firstName.trim(), 
+    lastName: req.body.lastName.trim(), 
+    email: req.body.email.trim()}), req.body.password.trim(),
      function(err, user){
 
     if (err) {
@@ -325,8 +325,8 @@ app.post("/register", function(req, res){
 app.post("/login", function(req, res){
 
   const user = new User({
-    username: req.body.username,
-    password: req.body.password,
+    username: req.body.username.trim(),
+    password: req.body.password.trim(),
   });
 
   req.login(user, function(err){
