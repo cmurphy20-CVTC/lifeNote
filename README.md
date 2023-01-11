@@ -17,4 +17,4 @@ Early on in development, I fell into the trap of coming up with too many feature
 
 Link to Live Demo - https://youtu.be/XM6DNkFl9-E 
 
-Documentation - https://www.pivotaltracker.com/n/projects/2580737
+Pivotal Tracker Documentation (please view the project history tab)  - https://www.pivotaltracker.com/n/projects/2580737
