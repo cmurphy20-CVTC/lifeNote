@@ -423,7 +423,7 @@ app.post("/sendEmail", function(req, res) {
   // send mail with defined transport object
   let info = transporter.sendMail({
     from: '"Nodemailer Contact" <process.env.EMAIL>', // sender address
-    to: "cmurphy20@student.cvtc.edu", // list of receivers
+    to: "c_murphy343@yahoo.com", // list of receivers
     subject: "Node Contact Request", // Subject line
     html: output, // html body
   });
