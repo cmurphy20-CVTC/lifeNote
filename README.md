@@ -9,6 +9,11 @@ For a responsive modern looking website I used Bootstrap so that the content wil
 
 Features
 
-Users are able to create their own accounts and their passwords which are protected by salting and hashing from Passport.JS. Then users can login to access their account and notes. LifeNote allows users to create, update and delete their notes. There are easy to follow instructions and navigation to guide the user. There is also a search bar at the top of the home page to search for notes. 
+Users are able to create their own accounts and their passwords which are protected by salting and hashing from Passport.JS. Then users can login to access their account and notes. LifeNote allows users to create, update and delete their notes. There are easy to follow instructions and navigation to guide the user. There is also a search bar at the top of the home page to search for notes. I utilized packages like Passport
+
+Challenges
+There was a learning curve for using Node.js and MongoDB in this app. I have used SQL in the past and it is easier to buidl relationships between different items in an app. However, MongoDB is much more flexible with making changes to the database. I fell into the trap of coming up with too many features for the app and...
 
 
+
+Link to Live Demo - https://youtu.be/XM6DNkFl9-E 
