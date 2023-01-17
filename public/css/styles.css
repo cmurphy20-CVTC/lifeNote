@@ -1,11 +1,14 @@
 html {
-  min-height: 100%;
+  min-height: 100vh;
+  min-width: 100%;
   position: relative;
 }
 
 body {
   background-color: #1b2223;
   font-family: Open Sans Bold;
+  min-height: 100vh;
+  margin-bottom: 2.5%;
 }
 
 h1, h2, h3, p, em {
@@ -179,6 +182,12 @@ h3.feature-title {
 }
 
 /* Forms */
+
+#forms {
+  max-width: 99vw;
+  min-width: 90vw;
+}
+
 .form-title {
   background-color: #3A4F50;
   color: #f4fefd;
@@ -194,7 +203,7 @@ h3.feature-title {
 .form-label {
   color: #f4fefd;
   font-weight: bold;
-  font-size: 150%;
+  font-size: 200%;
 }
 
 .card-body {
@@ -203,6 +212,16 @@ h3.feature-title {
 
 #contactP {
   font-size: 20px;
+}
+
+input,
+input::placeholder {
+  font: 20px Open Sans Bold;
+}
+
+textarea,
+textarea::placeholder {
+  font: 20px Open Sans Bold;
 }
 
 /* Feature Section */
@@ -275,16 +294,20 @@ h3.feature-title {
 /* Footer */
 
 .footer {
-	
-	text-align: center;
-	margin-top: 5%;
-	width: 100%;
-	height: .5%;
-	background-color: #4CB8C4;  
-  padding-bottom: .5%;
+	background-color: #4CB8C4;
+  bottom: 0;
+  height: 2.5%;
+  
+  position: absolute;
+  text-align: center;  
+  width: 100%;
 }
 
-.footer p {
+.footer > span {
   font-size: 100%;
   color: #f4fefd;
+  padding-bottom: 2%;
+  
+  margin-top: 5%;
+
 }

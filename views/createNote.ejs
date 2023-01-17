@@ -1,41 +1,38 @@
 <%- include("partials/headerAuthed"); -%>
 
-<h1>Create Your Topics!</h1>
+<div class="container mt-5 mx-auto">
+<h1>Welcome to Life Note!</h1>
 
-<div>
 
-  <li><a href="/editProfile">Edit Your Profile</a></li>
-  <a class="btn btn-light btn-lg" href="/logout" role="button">Log Out</a>
 
-</div>
-
-<h3>Welcome to LifeNote!</h3>
-<p>This app will help you remember everything in your life.</p>
-<p>First create a note you would like to focus on. For example a recipe you want to remember.</p>
-<p>Don't worry you will be able to create more notes later on.</p>
-
-  <div class="row">
-    <div class="col-sm-8">
-      <div class="card">
+  <div id="forms" class="row">
+    <div class="col-md-8">
+      <div class="regLogForm card border-gradient">
         <div class="card-body">
-
           
           <form action="/createNote" method="POST">
+            <h2>Create Your First Note</h2>
+            <p>This app will help you remember everything in your life.</p>
+            <p>First create a note you would like to focus on. For example a recipe you want to remember.</p>
+            <p>Don't worry you will be able to create more notes later on.</p>
             <div class="form-group">
-              <label for="firstNote">First Title</label>
+              <label class="form-label" for="firstNote">First Title</label>
               <input type="text" class="form-control" name="firstNoteTitle" placeholder="Recipes">
             </div>
-            <label>First Note</label>
+            <div class="form-group">
+            <label class="form-label" for="firstNoteBody">First Note</label>
             <textarea class="form-control" name="firstNoteBody" rows="5" cols="30" placeholder="What do you want to remember for later?"></textarea>
           </div>
+          
         
             <button type="submit" class="btn btn-dark">Confirm</button>
           </form>
 
-          <p>Click confirm to continue.</p>
+          
 
         </div>
       </div>
     </div>
-
+  </div>
+</div>
 <%- include("partials/footer"); -%>

@@ -100,12 +100,14 @@ app.get("/register", function(req, res){
 });
 
 // step one in creating account
-app.get("/user/createNote", function(req, res){
+app.get("/createNote", function(req, res){
   if(req.isAuthenticated()) {
     res.render("createNote");
    } else {
     res.redirect("/")
    }
+
+   res.render("createNote");
 });
 
 app.get("/user/note", function(req, res){
@@ -299,10 +301,10 @@ app.post("/delete", function(req, res){
 app.post("/register", function(req, res){
 
   User.register(new User({
-    username: req.body.username, 
-    firstName: req.body.firstName, 
-    lastName: req.body.lastName, 
-    email: req.body.email}), req.body.password,
+    username: req.body.username.trim(), 
+    firstName: req.body.firstName.trim(), 
+    lastName: req.body.lastName.trim(), 
+    email: req.body.email.trim()}), req.body.password.trim(),
      function(err, user){
 
     if (err) {
@@ -313,7 +315,7 @@ app.post("/register", function(req, res){
 
       passport.authenticate("local")(req, res, function(){
 
-        res.redirect("/userHome");
+        res.redirect("/createNote");
 
       })
     }
@@ -323,8 +325,8 @@ app.post("/register", function(req, res){
 app.post("/login", function(req, res){
 
   const user = new User({
-    username: req.body.username,
-    password: req.body.password,
+    username: req.body.username.trim(),
+    password: req.body.password.trim(),
   });
 
   req.login(user, function(err){
@@ -421,7 +423,7 @@ app.post("/sendEmail", function(req, res) {
   // send mail with defined transport object
   let info = transporter.sendMail({
     from: '"Nodemailer Contact" <process.env.EMAIL>', // sender address
-    to: "cmurphy20@student.cvtc.edu", // list of receivers
+    to: "c_murphy343@yahoo.com", // list of receivers
     subject: "Node Contact Request", // Subject line
     html: output, // html body
   });
