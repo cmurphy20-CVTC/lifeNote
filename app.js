@@ -1,5 +1,5 @@
 //jshint esversion:6
-require('dotenv').config();
+require('dotenv').config()
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
@@ -87,7 +87,7 @@ passport.deserializeUser(function(id, done) {
 
 app.get("/", function(req, res){
   
-  res.render("home", {isUser: "false"});
+  res.render("home");
   
 });
 
