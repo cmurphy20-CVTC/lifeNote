@@ -52,7 +52,7 @@ const userSchema = new mongoose.Schema ({
 
   username: { type: String, unique: true },
   firstName: String,
-  lastName: String, // values: email address, googleId
+  lastName: String, 
   password: String,
   email: String,
   notes: [{type: mongoose.Schema.Types.ObjectId, ref: 'Note'}], 
@@ -82,8 +82,6 @@ passport.deserializeUser(function(id, done) {
     done(err, user);
   });
 });
-
-
 
 app.get("/", function(req, res){
   
